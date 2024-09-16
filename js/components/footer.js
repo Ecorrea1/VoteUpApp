@@ -5,7 +5,7 @@ class Footer extends HTMLElement {
     this.attributesComponents = [
       this.copyright = '© Derechos Reservados',
       this.year = `${ new Date().getFullYear() }`,
-      this.company = 'MOVIDA',
+      this.company = 'VoteUp',
       this.classnamemessage = 'copyright'
     ];
   }

@@ -37,7 +37,7 @@ const sendSession = async ( data) => {
         localStorage.setItem("reset", JSON.stringify(reset_pass)); 
         return true
       }
-      const { id, email, name, country_id, role } = response.data; 
+      const { id, email, name, country_id, commune_id, role } = response.data; 
       const { pages } = role;
       
       // localStorage.setItem("token", response.token);
@@ -46,6 +46,7 @@ const sendSession = async ( data) => {
       localStorage.setItem("role", role.id );
       localStorage.setItem("pages", pages );
       localStorage.setItem("country", country_id);
+      localStorage.setItem("commune", commune_id);
       localStorage.setItem("uid", id);
       localStorage.setItem("reset", JSON.stringify(false)); 
       localStorage.setItem("user", JSON.stringify(response.data));

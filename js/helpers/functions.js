@@ -4,6 +4,7 @@ const user = localStorage.getItem('name');
 const userId = Number(localStorage.getItem('uid'));
 const role = Number(localStorage.getItem('role'));
 const country = Number(localStorage.getItem('country'));
+const commune = Number(localStorage.getItem('commune'));
 const commission = localStorage.getItem('commission');
 const category = localStorage.getItem('category');
 const ubication = localStorage.getItem('ubication');
