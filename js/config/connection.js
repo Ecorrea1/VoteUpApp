@@ -1,6 +1,6 @@
-const developerMode = true;
-const api = developerMode  ? 'http://localhost:3000/api/v1/' : 'https://movida-api.onrender.com/api/v1/';
-const url = origin === "http://127.0.0.1:5500" || origin.includes('http://192.168.1.') ? "" : "/movida-chile";
+const developerMode = false;
+const api = developerMode  ? 'http://localhost:3000/api/v1/' : 'https://voteup-aatt.onrender.com/api/v1/';
+const url = origin === "http://127.0.0.1:5500" || origin.includes('http://192.168.1.') ? "" : "/";
 
 
 function urlAdaptive() {
