@@ -1,0 +1,123 @@
+@import 'loader.css';
+@import 'paginate.css';
+
+html{
+  height: 100%;
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-color: #FFD600;
+  color: black;
+}
+
+.fader{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: black;
+}
+
+.fader .message{
+  color: #FFD600;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: message 1s alternate infinite ease-in-out
+}
+
+.container-search{
+  width: 85%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.btn-ingreso{
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.btn{
+  margin-left: 2px;
+  background-color: black;
+  border-color: #FFD600;
+  color: white;
+  border-radius: 2rem;
+}
+
+.close{
+  opacity: 0;
+  transition: 1.5;
+}
+
+.hidden{
+  overflow: hidden;
+}
+
+/* Estilos para la paginación */
+.pagination-container {
+  text-align: center; /* Centra la paginación */
+  padding: 10px; /* Espaciado alrededor de la paginación */
+}
+
+.pagination-container button {
+  color: black; /* Color del texto */
+  float: none; /* Asegura que los botones no floten */
+  padding: 8px 16px; /* Espaciado interno */
+  text-decoration: none; /* Sin subrayado */
+  transition: background-color .3s; /* Transición suave para el fondo */
+  margin: 0 4px; /* Espaciado entre botones */
+  border: 1px solid #ddd; /* Borde de los botones */
+  background-color: #f8f9fa; /* Color de fondo */
+  cursor: pointer; /* Cursor en forma de mano al pasar el mouse */
+}
+
+/* Estilo para el botón de la página actual */
+.pagination-container button.active {
+  background-color: #007bff; /* Color de fondo para la página actual */
+  color: white; /* Color del texto para la página actual */
+  border: 1px solid #007bff; /* Borde para la página actual */
+}
+
+/* Estilo para los botones al pasar el mouse */
+.pagination-container button:hover:not(.active) {
+  background-color: #ddd; /* Color de fondo al pasar el mouse */
+}
+
+/* Estilo para los bordes redondeados de los botones */
+.pagination-container button {
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+@media screen and (max-width: 480px) {
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container-search input{
+    display: flex;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+  .container-search select{
+    display: flex;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .container-search button{
+    display: flex;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+}
