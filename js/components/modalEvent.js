@@ -1,4 +1,4 @@
-class ModalUbications extends HTMLElement {
+class ModalEvents extends HTMLElement {
   constructor() {
     super();
     this.attributesComponents = [
@@ -29,36 +29,28 @@ class ModalUbications extends HTMLElement {
                 <form class="row g-2 container" id="createRegister">
                   <div class="col-md-12">
                     <label for="name" class="form-label">Nombre</label>
-                    <input type="text" class="form-control text-uppercase" id="name" name="name" placeholder="Ingrese nombre completo" required>
+                    <input type="text" class="form-control text-uppercase" id="name" name="name" placeholder="Ingrese nombre" required>
                     <div id="divErrorName"></div> 
                   </div>
                   <div class="col-md-12">
-                      <label for="name-pacto" class="form-label">Nombre de Pacto</label>
-                      <textarea class="form-control" placeholder="Ingresa nombre de pacto" id="name-pacto"></textarea>
+                      <label for="description" class="form-label">Descripcion</label>
+                      <textarea class="form-control" placeholder="Ingresa la descripcion de este material" id="description"></textarea>
                       <label for="floatingTextarea2">Ingresa la descripcion</label>
-                      <div id="divErrorNamePacto"></div>                  
+                      <div id="divErrorDescription"></div>                  
                   </div>
 
-                  <div class="col-md-6">
-                    <label for="number-candidate" class="form-label">Numero de Candidato</label>
-                    <input type="number" class="form-control text-uppercase" id="number-candidate" name="number-candidate" placeholder="Ingrese numero de candidato" required>
-                    <div id="divErrornumber-candidate"></div> 
+                  <div class="col-md-12">
+                    <label for="options" class="form-label">Candidatos</label>
+                    <input type="text" class="form-control text-uppercase" id="options" name="options" placeholder="Ingrese candidatos" required>
+                    <div id="divErrorOptions"></div> 
                   </div>
 
-                  <div class="col-md-6 ms-auto">
+                  <div class="col-md-12 ms-auto">
                     <label for="commune" class="form-label">Comuna</label>
                     <select class="form-select" id="commune" name="commune" >
                     <option selected disabled value="">Seleccione una Comuna</option>
                     </select>
                     <div id="divErrorCommune"></div>
-                  </div>
-                  
-                  <div class="col-md-6 ms-auto">
-                    <label for="event" class="form-label">Evento</label>
-                    <select class="form-select" id="event" name="event" >
-                    <option selected disabled value="">Seleccione un evento</option>
-                    </select>
-                    <div id="divErrorEvent"></div>
                   </div>
 
                   <div class="col-md-12 ms-auto">
@@ -85,4 +77,4 @@ class ModalUbications extends HTMLElement {
     }
 }
 
-customElements.define('modal-ubications-component', ModalUbications);
+customElements.define('modal-event-component', ModalEvents);

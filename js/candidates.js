@@ -8,6 +8,7 @@ const divErrorName = document.getElementById('divErrorName');
 const divErrorDescription = document.getElementById('divErrorDescription');
 const divErrorTables = document.getElementById('divErrorTables');
 const divErrorCommune = document.getElementById('divErrorCommune');
+const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
 
 // Show Alert
@@ -33,6 +34,7 @@ const nameInput = document.getElementById('name');
 const namePactoInput = document.getElementById('name-pacto');
 const numberCandidateInput = document.getElementById('number-candidate');
 const communeInput = document.getElementById('commune');
+const eventInput = document.getElementById('event');
 const enabledInput = document.getElementById('enabled');
 
 // async function paginado( paginas, limit = 10){
@@ -82,6 +84,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     enabled :enabled.value,
     tables: Number(tablesInput.value),
     commune_id: Number(communeInput.value),
+    event_id: Number(eventInput.value),
     user: userId
   }
 
@@ -151,4 +154,5 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 window.addEventListener("load", async () => {
   await onLoadSite();
   await showOptions('commune', api + `commune?country=${country}`);
+  await showOptions('event', api + `event?commune=${1}`);
 });

@@ -22,7 +22,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Descripcion', 'Mesas', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Descripcion', 'Candidatos', 'Habilitado', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -31,14 +31,9 @@ const formRegister = document.getElementById('createRegister');
 const idInput = document.getElementById('uid');
 const nameInput = document.getElementById('name');
 const descriptionInput = document.getElementById('description');
-const tablesInput = document.getElementById('tables');
+const optionsInput = document.getElementById('options');
 const communeInput = document.getElementById('commune');
 const enabledInput = document.getElementById('enabled');
-
-// async function paginado( paginas, limit = 10){
-//   const totalPages =  paginas > 32 ? 32 : paginas
-//   for (let index = 0; index < totalPages; index++ ) document.getElementById("indice").innerHTML+= `<li class="page-item"><button class="page-link" onclick="printList(${ index * limit })">${ index + 1}</button></li>`;
-// }
     
 const printList = async ( data, limit = 10 ) => {
   table.innerHTML = "";
@@ -48,12 +43,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, description, tables, enabled } = data[i];
+    const { id, name, description, options, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, description, tables,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, description, options,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -62,9 +57,9 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `tables?ubication=${1}`);
-  localStorage.setItem("ubication",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
-  localStorage.setItem("ubicationSearch",  JSON.stringify(registers.data ));
+  const registers = await consulta( api + `event?commune=${1}`);
+  localStorage.setItem("event",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
+  localStorage.setItem("eventSearch",  JSON.stringify(registers.data ));
   printList( registers.data );
 }
 
@@ -77,7 +72,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     name: nameInput.value.toUpperCase(),
     description: descriptionInput.value,
     enabled :enabled.value,
-    tables: Number(tablesInput.value),
+    options: optionsInput.value,
     commune_id: Number(communeInput.value),
     user: userId
   }
@@ -91,7 +86,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
 }
 
 const createEditData = async ( data, uid = '') => {  
-  const query = uid == '' ? 'ubication' : `ubication/${ uid }`
+  const query = uid == '' ? 'event' : `event/${ uid }`
   return await fetch( api + query , {
     method: uid ? 'PUT' : 'POST',
     headers: { 'Content-Type': 'application/json'},
@@ -110,13 +105,13 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'ubication/' + uid );    
-  const { name, description, tables, commune_id, enabled } = data;
+  const data = await consulta( api + 'event/' + uid );    
+  const { name, description, options, commune_id, enabled } = data;
 
   idInput.value = uid;
   nameInput.value =  name;
   descriptionInput.value = description ?? '';
-  tablesInput.value = tables;
+  optionsInput.value = options;
   communeInput.value = commune_id;
   enabledInput.value = enabled;
 
@@ -126,7 +121,7 @@ function clearForm() {
   idInput.value = '';
   nameInput.value = '';
   descriptionInput.value = '';
-  tablesInput.value = '';
+  optionsInput.value = '';
   communeInput.value = '';
   enabledInput.value = true;
 }
