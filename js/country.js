@@ -103,7 +103,7 @@ const createEditCristal = async ( data, uid = '') => {
 }
 
 async function showModalCreateOrEdit( uid, btnAction = 'CREATE' | 'EDIT' | 'SHOW' ) {
-    myModal.show();
+    
     formRegister.reset();
   
     const data = await consulta( api + 'country/' + uid );
@@ -117,6 +117,7 @@ async function showModalCreateOrEdit( uid, btnAction = 'CREATE' | 'EDIT' | 'SHOW
     codeInput.value =  Number(code.substring('0'));
     descriptionInput.value = description ?? '';
     enabledInput.value = enabled;
+    myModal.show();
 }
 function clearForm() {
   idInput.value = '';

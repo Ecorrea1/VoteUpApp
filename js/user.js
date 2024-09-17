@@ -74,6 +74,8 @@ async function showModalCreateOrEdit() {
   roleInput.value = role;
   nationalityInput.value = country_id;
   communeInput.value = commune_id;
+
+  myModal.show();
 }
 function clearForm() {
   formRegister.reset();

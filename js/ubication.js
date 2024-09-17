@@ -105,7 +105,6 @@ const createEditData = async ( data, uid = '') => {
 }
 
 async function showModalCreateOrEdit( uid ) {
-  myModal.show();
   formRegister.reset();
 
   toggleMenu('edit_register', true);
@@ -120,6 +119,8 @@ async function showModalCreateOrEdit( uid ) {
   tablesInput.value = tables;
   communeInput.value = commune_id;
   enabledInput.value = enabled;
+
+  myModal.show();
 }
 function clearForm() {
   idInput.value = '';

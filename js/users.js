@@ -71,8 +71,8 @@ const sendInfo = async (uid = '', action = 'CREATE'|'EDIT') => {
     name: nameInput.value.toUpperCase(),
     email: emailInput.value,
     address: addressInput.value.toUpperCase(),
-    code: codeInput.value,
-    phone: phoneInput.value,
+    code: Number(codeInput.value),
+    phone: Number(phoneInput.value),
     role: roleInput.value,
     country_id: nationalityInput.value,
     commune_id: communeInput.value,
@@ -89,7 +89,6 @@ const sendInfo = async (uid = '', action = 'CREATE'|'EDIT') => {
 }
 
 async function showModalCreateOrEdit( id_info ) {
-  myModal.show();
   formRegister.reset();
 
   toggleMenu('edit_register', true);
@@ -110,14 +109,16 @@ async function showModalCreateOrEdit( id_info ) {
   nationalityInput.value = country_id;
   communeInput.value = commune_id;
   enabledInput.value = enabled;
+
+  myModal.show();
 }
 function clearForm() {
   formRegister.reset();
   const codeCurrent = JSON.parse(localStorage.getItem("code")).filter(e => e.id == country)[0].code;
   formRegister.reset();
   codeInput.value = codeCurrent;
-  nationalityInput.value = country;
-  communeInput.value = commune;
+  nationalityInput.value = '';
+  communeInput.value = '';
   enabledInput.value = true;
   roleInput.value = 1;
 }
@@ -159,6 +160,6 @@ window.addEventListener("load", async () => {
   await onLoadSite()
   await showOptions('rol', api + `role`);
   await showOptions('nationality', api + `country`);
-  await showOptions('commune', api + `commune?country${country}`);
+  await showOptions('commune', api + `commune?country=${country}`);
   await showOptionsCode('code');
 });

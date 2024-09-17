@@ -4,8 +4,8 @@ const userNameInput = user;
 
 const hiUser = () => {
 
-    welcomeUser.textContent = `Hola, ${ userNameInput }!`;
-    message.textContent = `Bienvenido a la plataforma de VoteUp`
+  welcomeUser.textContent = `Hola, ${ userNameInput }!`;
+  message.textContent = `Bienvenido a la plataforma de VoteUp`
 
 }
 

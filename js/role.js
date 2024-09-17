@@ -98,7 +98,6 @@ const createEditCristal = async ( data, uid = '') => {
 }
 
 async function showModalCreateOrEdit( uid, btnAction = 'CREATE' | 'EDIT' | 'SHOW' ) {
-    myModal.show();
     formRegister.reset();
   
     const data = await consulta( api + 'role/' + uid );
@@ -111,6 +110,9 @@ async function showModalCreateOrEdit( uid, btnAction = 'CREATE' | 'EDIT' | 'SHOW
     nameInput.value =  name;
     descriptionInput.value = description ?? '';
     enabledInput.value = enabled;
+
+    // Mostrar el modal solo después de que los datos se hayan cargado
+    myModal.show();
 }
 function clearForm() {
   idInput.value = '';
