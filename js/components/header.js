@@ -70,10 +70,7 @@ class Header extends HTMLElement {
 
   ocultarPaginasPorPermiso() {
     const pagesArray = JSON.parse(localStorage.getItem('pages') ) .map(item => item.page);
-    const paginasPermitidas = pagesArray || ['logistic', 'register','ubication', 'user', 'close-session'];
-    // const paginasPermitidas = ['logistic', 'register', 'config','ubication', 'tables', 'role', 'users', 'user', 'close-session'];
-    console.log(JSON.parse(localStorage.getItem('pages') ));
-    
+    const paginasPermitidas = pagesArray || ['user', 'close-session'];
     const items = document.querySelectorAll('#pages .nav-item');
     const pages = document.querySelectorAll('#pages .nav-item .dropdown-item');
     const userInfo = document.querySelectorAll('#user-info .nav-item .dropdown-item');
