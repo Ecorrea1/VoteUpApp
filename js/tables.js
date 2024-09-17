@@ -111,7 +111,7 @@ async function showModalCreateOrEdit( uid ) {
   idInput.value = uid;
   nameInput.value =  name;
   descriptionInput.value = description ?? '';
-  totalInput.value = table;
+  totalInput.value = total;
   ubicationInput.value = ubication_id;
   enabledInput.value = enabled;
 

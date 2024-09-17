@@ -8,7 +8,6 @@ const divErrorName = document.getElementById('divErrorName');
 const divErrorDescription = document.getElementById('divErrorDescription');
 const divErrorTables = document.getElementById('divErrorTables');
 const divErrorCommune = document.getElementById('divErrorCommune');
-const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
 
 // Show Alert
@@ -23,7 +22,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'N. Candidato','Nombre', 'Pacto', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Descripcion', 'total', 'Habilitado', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -31,16 +30,10 @@ const table = document.getElementById('list_row');
 const formRegister = document.getElementById('createRegister');
 const idInput = document.getElementById('uid');
 const nameInput = document.getElementById('name');
-const namePactoInput = document.getElementById('name-pacto');
-const numberCandidateInput = document.getElementById('number-candidate');
-const communeInput = document.getElementById('commune');
-const eventInput = document.getElementById('event');
+const descriptionInput = document.getElementById('description');
+const totalInput = document.getElementById('total');
+const ubicationInput = document.getElementById('ubication');
 const enabledInput = document.getElementById('enabled');
-
-// async function paginado( paginas, limit = 10){
-//   const totalPages =  paginas > 32 ? 32 : paginas
-//   for (let index = 0; index < totalPages; index++ ) document.getElementById("indice").innerHTML+= `<li class="page-item"><button class="page-link" onclick="printList(${ index * limit })">${ index + 1}</button></li>`;
-// }
     
 const printList = async ( data, limit = 10 ) => {
   table.innerHTML = "";
@@ -49,16 +42,13 @@ const printList = async ( data, limit = 10 ) => {
     return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
   }
 
-  console.log(data);
-  
   for (const i in data ) {
-    console.log(data[i]);
-    const { id, name, namePacto, numberCandidate, enabled } = data[i];
+    const { id, name, description, total, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ numberCandidate, name, namePacto,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, description ?? '-', total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -67,9 +57,9 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `candidates?commune=${commune}`);
-//   localStorage.setItem("candidates",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
-  localStorage.setItem("candidates",  JSON.stringify(registers.data ));
+  const registers = await consulta( api + `vote-tables`);
+  localStorage.setItem("tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
+  localStorage.setItem("tablesSearch",  JSON.stringify(registers.data ));
   printList( registers.data );
 }
 
@@ -81,10 +71,9 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
   const data = {
     name: nameInput.value.toUpperCase(),
     description: descriptionInput.value,
+    ubication_id: Number(ubicationInput.value),
+    total: Number(totalInput.value),
     enabled :enabled.value,
-    tables: Number(tablesInput.value),
-    commune_id: Number(communeInput.value),
-    event_id: Number(eventInput.value),
     user: userId
   }
 
@@ -97,7 +86,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
 }
 
 const createEditData = async ( data, uid = '') => {  
-  const query = uid == '' ? 'candidates' : `candidates/${ uid }`
+  const query = uid == '' ? 'vote-tables' : `vote-tables/${ uid }`
   return await fetch( api + query , {
     method: uid ? 'PUT' : 'POST',
     headers: { 'Content-Type': 'application/json'},
@@ -116,14 +105,14 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'candidates/' + uid );    
-  const { name, namePacto, numberCandidate, commune_id, enabled } = data;
+  const data = await consulta( api + 'vote-tables/' + uid );    
+  const { name, description, total, ubication_id, enabled } = data;
 
   idInput.value = uid;
   nameInput.value =  name;
-  namePactoInput.value = namePacto ?? '';
-  numberCandidateInput.value = numberCandidate;
-  communeInput.value = commune_id;
+  descriptionInput.value = description ?? '';
+  totalInput.value = total;
+  ubicationInput.value = ubication_id;
   enabledInput.value = enabled;
 
   myModal.show();
@@ -132,8 +121,8 @@ function clearForm() {
   idInput.value = '';
   nameInput.value = '';
   descriptionInput.value = '';
-  tablesInput.value = '';
-  communeInput.value = commune;
+  totalInput.value = 0;
+  ubicationInput.value = '';
   enabledInput.value = true;
 }
 
@@ -153,6 +142,6 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
-  await showOptions('commune', api + `commune?country=${country}`);
-  await showOptions('event', api + `event?commune=${commune}`);
+  await showOptions('tables', api + `tables?=ubication${1}`);
+  await showOptions('candidates', api + `candidates?=commune${commune}`);
 });

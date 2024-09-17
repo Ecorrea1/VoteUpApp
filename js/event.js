@@ -57,7 +57,7 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `event?commune=${1}`);
+  const registers = await consulta( api + `event?commune=${commune}`);
   localStorage.setItem("event",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
   localStorage.setItem("eventSearch",  JSON.stringify(registers.data ));
   printList( registers.data );
@@ -122,7 +122,7 @@ function clearForm() {
   nameInput.value = '';
   descriptionInput.value = '';
   optionsInput.value = '';
-  communeInput.value = '';
+  communeInput.value = commune;
   enabledInput.value = true;
 }
 

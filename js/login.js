@@ -44,7 +44,7 @@ const sendSession = async ( data) => {
       localStorage.setItem("email", email);
       localStorage.setItem("name", name);
       localStorage.setItem("role", role.id );
-      localStorage.setItem("pages", pages );
+      localStorage.setItem("pages", JSON.stringify(pages));
       localStorage.setItem("country", country_id);
       localStorage.setItem("commune", commune_id);
       localStorage.setItem("uid", id);
