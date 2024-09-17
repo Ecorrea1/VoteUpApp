@@ -28,15 +28,16 @@ class Header extends HTMLElement {
                       <li class="nav-item dropdown" id="logistic">
                           <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Logistica</a>
                           <ul class="dropdown-menu">
-                              <li><a id="url" name="logistic" class="dropdown-item" href="/logistic.html">Eventos</a></li>
+                              <li><a id="url" name="event" class="dropdown-item" href="/event.html">Eventos</a></li>
                               <li><a id="url" name="ubication" class="dropdown-item" href="/ubication.html">Ubicaciones</a></li>
+                              <li><a id="url" name="tables" class="dropdown-item" href="/tables.html">Mesas</a></li>
                           </ul>
                       </li>
                       <li class="nav-item dropdown" id="register">
                           <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Registros</a>
                           <ul class="dropdown-menu">
                               <li><a id="url" name="users" class="dropdown-item" href="/users.html">Usuarios</a></li>
-                              <li><a id="url" name="missionary" class="dropdown-item" href="/missionary.html">Participantes</a></li>
+                              <li><a id="url" name="candidates" class="dropdown-item" href="/candidates.html">Candidatos</a></li>
                           </ul>
                       </li>
                       <li class="nav-item dropdown" id="config">
@@ -67,8 +68,8 @@ class Header extends HTMLElement {
   }
 
   ocultarPaginasPorPermiso() {
-    // const paginasPermitidas = JSON.parse(localStorage.getItem('pages')) || ['logistic', 'register', 'config','ubication', 'role', 'users', 'user', 'close-session'];
-    const paginasPermitidas = ['logistic', 'register', 'config','ubication', 'role', 'users', 'user', 'close-session'];
+    const paginasPermitidas = JSON.parse(localStorage.getItem('pages')) || ['logistic', 'register', 'config','ubication', 'role', 'users', 'user', 'close-session'];
+    // const paginasPermitidas = ['logistic', 'register', 'config','ubication', 'tables', 'role', 'users', 'user', 'close-session'];
 
     const items = document.querySelectorAll('#pages .nav-item');
     const pages = document.querySelectorAll('#pages .nav-item .dropdown-item');
