@@ -40,12 +40,7 @@ function paginado( table, limit = 5,  bar = false, counter = true ){
 const showOptions = async ( select, query = api + select ) => {
   const selectElement = document.getElementById( select );
   selectElement.value = "";
-  let options = JSON.parse(localStorage.getItem( select )) || [];
-  
-  console.log( api + select);
-  console.log(options);
-  
-  
+  let options = JSON.parse(localStorage.getItem( select )) || [];  
   if (!options.length) {
     const result = await consulta( !!query ? query : api + select );
     options = result.data;

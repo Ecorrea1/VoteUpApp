@@ -78,7 +78,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     description: descriptionInput.value,
     enabled :enabled.value,
     tables: Number(tablesInput.value),
-    commune_id: communeInput.value,
+    commune_id: Number(communeInput.value),
     user: userId
   }
 
@@ -112,13 +112,13 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('save_register', false);
   
   const data = await consulta( api + 'ubication/' + uid );    
-  const { name, description, tables, enabled } = data;
+  const { name, description, tables, commune_id, enabled } = data;
 
   idInput.value = uid;
   nameInput.value =  name;
   descriptionInput.value = description ?? '';
   tablesInput.value = tables;
-  communeInput.value = tables;
+  communeInput.value = commune_id;
   enabledInput.value = enabled;
 }
 function clearForm() {
@@ -126,6 +126,7 @@ function clearForm() {
   nameInput.value = '';
   descriptionInput.value = '';
   tablesInput.value = '';
+  communeInput.value = '';
   enabledInput.value = true;
 }
 
