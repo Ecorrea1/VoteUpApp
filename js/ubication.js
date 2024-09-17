@@ -2,9 +2,12 @@
 let nameValidator = false;
 let descriptionValidator = false;
 let enabledValidator = false;
+let tablesValidator = false;
 
 const divErrorName = document.getElementById('divErrorName');
 const divErrorDescription = document.getElementById('divErrorDescription');
+const divErrorTables = document.getElementById('divErrorTables');
+const divErrorCommune = document.getElementById('divErrorCommune');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
 
 // Show Alert
@@ -19,7 +22,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Descripcion', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Descripcion', 'Mesas', 'Habilitado', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -28,6 +31,8 @@ const formRegister = document.getElementById('createRegister');
 const idInput = document.getElementById('uid');
 const nameInput = document.getElementById('name');
 const descriptionInput = document.getElementById('description');
+const tablesInput = document.getElementById('tables');
+const communeInput = document.getElementById('commune');
 const enabledInput = document.getElementById('enabled');
 
 // async function paginado( paginas, limit = 10){
@@ -43,12 +48,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, description, enabled } = data[i];
+    const { id, name, description, tables, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, description,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, description, tables,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -72,7 +77,8 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     name: nameInput.value.toUpperCase(),
     description: descriptionInput.value,
     enabled :enabled.value,
-    country_id: country,
+    tables: Number(tablesInput.value),
+    commune_id: communeInput.value,
     user: userId
   }
 
@@ -106,17 +112,20 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('save_register', false);
   
   const data = await consulta( api + 'ubication/' + uid );    
-  const { name, description, enabled } = data;
+  const { name, description, tables, enabled } = data;
 
   idInput.value = uid;
   nameInput.value =  name;
   descriptionInput.value = description ?? '';
+  tablesInput.value = tables;
+  communeInput.value = tables;
   enabledInput.value = enabled;
 }
 function clearForm() {
   idInput.value = '';
   nameInput.value = '';
   descriptionInput.value = '';
+  tablesInput.value = '';
   enabledInput.value = true;
 }
 
@@ -134,4 +143,7 @@ document.querySelector(`#save_register`).addEventListener('click', async (e) => 
 btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.value, 'EDIT' ));
 
 // Al abrir la pagina
-window.addEventListener("load", async () => await onLoadSite());
+window.addEventListener("load", async () => {
+  await onLoadSite();
+  await showOptions('commune', api + `commune?country=${country}`);
+});

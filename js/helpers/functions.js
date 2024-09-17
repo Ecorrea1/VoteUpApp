@@ -42,6 +42,10 @@ const showOptions = async ( select, query = api + select ) => {
   selectElement.value = "";
   let options = JSON.parse(localStorage.getItem( select )) || [];
   
+  console.log( api + select);
+  console.log(options);
+  
+  
   if (!options.length) {
     const result = await consulta( !!query ? query : api + select );
     options = result.data;
