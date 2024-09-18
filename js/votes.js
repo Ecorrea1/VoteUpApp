@@ -2,6 +2,9 @@
 let eventValidator = false;
 let enabledValidator = false;
 let tablesValidator = false;
+let selectedCandidate = 0;
+let selectedTable = 0;
+let selectedEvent = 0;
 
 const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorTables = document.getElementById('divErrorTables');

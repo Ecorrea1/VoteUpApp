@@ -27,11 +27,13 @@ class ModalUbications extends HTMLElement {
               <div class="modal-body">
 
                 <form class="row g-2 container" id="createRegister">
-                  <div class="col-md-12">
+                  
+                <div class="col-md-12">
                     <label for="name" class="form-label">Nombre</label>
                     <input type="text" class="form-control text-uppercase" id="name" name="name" placeholder="Ingrese nombre completo" required>
                     <div id="divErrorName"></div> 
                   </div>
+                  
                   <div class="col-md-12">
                       <label for="name-pacto" class="form-label">Nombre de Pacto</label>
                       <textarea class="form-control" placeholder="Ingresa nombre de pacto" id="name-pacto"></textarea>

@@ -22,11 +22,7 @@ class Loader extends HTMLElement {
       </div>`;
     }
   
-    render(){
-      this.innerHTML = `
-      ${this.template()}
-    `;
-    }
+    render(){ this.innerHTML = `${ this.template() }`; }
 
     connectedCallback() {
       this.render();

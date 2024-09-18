@@ -20,10 +20,12 @@ class Modal extends HTMLElement {
       <div class="modal fade" id="modalRegister" tabindex="-1" aria-labelledby="modalRegisterLabel" aria-hidden="true">
         <div class="${this.classname}">
           <div class="modal-content">
-            <div class="modal-header">
+            
+          <div class="modal-header">
               <h1 class="modal-title fs-5" id="modalRegisterLabel">${ this.titleModal }</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+          </div>
+          
             <div class="modal-body">
             
             <form class="row g-2 container" id="createRegister">
@@ -34,17 +36,20 @@ class Modal extends HTMLElement {
               <input type="text" class="form-control" id="name" name="name" placeholder="Ingrese nombre de producto" required>
               <div id="divErrorName"></div> 
             </div>
+          
             <div class="col-md-4">
               <label for="quantity" class="form-label">Cantidad</label>
               <input type="number" maxlength="10" placeholder="Ingresa cantidad" class="form-control" id="quantity" name="quantity" value="" required pattern="[0-9]+" required>
               <div class="invalid-feedback">Por favor ingresa un número válido.</div>
               <div id="divErrorQuantity"></div>
             </div>  
+
             <div class="col-md-12">
               <label for="description" class="form-label">Descripcion</label>
               <textarea class="form-control" id="description" name="description"></textarea>
               <div id="divErrorDescription"></div>
             </div>        
+            
             <div class="col-md-12 ms-auto">
               <label for="commission" class="form-label">Area</label>
               <select class="form-select" id="commission" name="commission" required>
@@ -52,6 +57,7 @@ class Modal extends HTMLElement {
               </select>
               <div id="divErrorCommission"></div>
             </div>
+            
             <div class="col-md-12 ms-auto">
               <label for="category" class="form-label">Categoria</label>
               <select class="form-select" id="category" name="category" required>
@@ -75,6 +81,7 @@ class Modal extends HTMLElement {
                 <option value="false">DESACTIVADO</option>
               </select>
             </div>
+            
             <div class="col-md-12">
               <label for="observation" class="form-label">Observaciones</label>
               <textarea class="form-control" id="observation" name="observation"></textarea>
@@ -83,10 +90,12 @@ class Modal extends HTMLElement {
             
          
             <input type="text" class="d-none" id="uid" name="uid">
+            
             <div class="col-sm-12 d-grid gap-2">
               <button class="btn btn-primary btn-lg" type="submit" id="save_register">Crear Registro</button>
               <button class="btn btn-primary btn-lg d-none" type="button" id="edit_register">Editar Registro</button>
             </div>
+            
             </form>
              
             </div>

@@ -5,6 +5,7 @@ class DataListComponent extends HTMLElement {
         this.title = 'Title',  // default attribute value
         this.name = 'Ingresa tu titulo',
         this.classname = 'form-check form-check-inline form-check-reverse',
+        // this.classname = 'form-control',
         this.result = ''
       ];
     }
@@ -18,8 +19,8 @@ class DataListComponent extends HTMLElement {
   
       connectedCallback() {
         this.innerHTML = `
-        <label for="exampleDataList" class="form-label">Datalist example</label>
-        <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="${this.name}">
+        <label for="exampleDataList" class="form-label">${this.title}</label>
+        <input class="${this.classname}" list="datalistOptions" id="exampleDataList" placeholder="${this.name}">
         <datalist id="datalistOptions"></datalist>`;
       }
   }
