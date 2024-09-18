@@ -1,4 +1,7 @@
 "use strict";
+
+let votesRealTime = [];
+let candiadateValidator = false;
 let eventValidator = false;
 let enabledValidator = false;
 let tablesValidator = false;
@@ -7,6 +10,7 @@ let selectedTable = 0;
 let selectedEvent = 0;
 
 const divErrorEvent = document.getElementById('divErrorEvent');
+const divErrorCandidate = document.getElementById('divErrorCandidate');
 const divErrorTables = document.getElementById('divErrorTables');
 const divErrorCommune = document.getElementById('divErrorCommune');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
@@ -44,12 +48,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, table_id, votes } = data[i];
+    const { id, name, table_name, votes } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, table_id, votes, showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, table_name, votes, showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -58,32 +62,42 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `vote-tables`);
-  localStorage.setItem("vote-tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
+  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}`);
+  localStorage.setItem("vote-tables",  JSON.stringify(registers.data.filter((e => e.enabled == true))) );
   localStorage.setItem("vote-tables-Search",  JSON.stringify(registers.data ));
   printList( registers.data );
 }
 
 
-const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
-  eventValidator = validateAllfields(eventInput, divErrorEvent);
-  if (!eventValidator) return console.log('Ingrese un evento');
+const sendInfo = async (id = '', action = 'CREATE'|'EDIT') => {
+
+  // eventValidator = validateAllfields(eventInput, divErrorEvent);
+  // if (!eventValidator) return console.log('Ingrese un evento');
   
   const data = {
-    event_id: Number(eventInput.value),
-    table_id: Number(tablesInput.value),
+    event_id: Number(selectedEvent),
+    table_id: Number(selectedTable),
     candidate_id: Number(candidateInput.value),
     votes: Number(votesInput.value),
-    enabled :enabled.value,
+    enabled : true,
     user: userId
   }
 
-  const result = await createEditData( data, idCristal );
-  if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
-  await showData();
+  const result = votesRealTime.find(item => 
+    item.event_id === data.event_id &&
+    item.table_id === data.table_id &&
+    item.candidate_id === data.candidate_id
+    // item.votes === votesRealTime.votes
+  );
+  
+  if (result) return showError(candidateInput, divErrorCandidate, 'Estas ingresando la misma mesa con el mismo candidato');
+  // const result = await createEditData( data, id );
+  // if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
+  
+  // await showData();
   bootstrap.Modal.getInstance(modalRegister).hide();
   document.querySelector(".modal-backdrop").remove();
-  showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
+  // showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
 }
 
 const createEditData = async ( data, uid = '') => {  
@@ -103,7 +117,7 @@ const createEditData = async ( data, uid = '') => {
 async function showModalCreateOrEdit( uid ) {
   formRegister.reset();
 
-  toggleMenu('edit_register', true);
+  // toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
   const data = await consulta( api + 'vote-tables/' + uid );    
@@ -120,30 +134,37 @@ async function showModalCreateOrEdit( uid ) {
 }
 function clearForm() {
   idInput.value = '';
-  eventInput.value = '';
-  tablesInput.value = '';
+  eventInput.value =  selectedEvent || '';
+  tablesInput.value = selectedTable || '';
   candidateInput.value = '';
   votesInput.value = 0;
-  // enabledInput.value = true;
 }
 
 btnNewRegister.addEventListener('click', () => {
   clearForm();
-  toggleMenu('edit_register', false);
+  // toggleMenu('edit_register', false);
   toggleMenu('save_register', true);
 });
 
 document.querySelector(`#save_register`).addEventListener('click', async (e) => {
   e.preventDefault();
+  //Comparar la mesa y el candidato con la lista guardada en el localhost
+  votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
+  selectedEvent =  eventInput.value;
+  selectedTable = tablesInput.value;
+  selectedCandidate = candidateInput.value;
+  
+
   await sendInfo('', 'CREATE');
 });
 
-btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.value, 'EDIT' ));
+// btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.value, 'EDIT' ));
+
 
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
   await showOptions('event', `${api}event?commune=${communeId}`);
-  await showOptions('tables', `${api}tables?ubication=${ubication}`);
+  await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
   await showOptions('candidate', `${api}candidates?commune=${communeId}`);
 });

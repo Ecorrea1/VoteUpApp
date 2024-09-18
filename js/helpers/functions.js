@@ -53,6 +53,22 @@ const showOptions = async ( select, query = api + select ) => {
     selectElement.innerHTML += optionElement;
   });
 };
+
+// Guardar la opcion de una opcion al momento de seleccionarla
+function assignedOption(selected) {
+  selected.addEventListener('click', function(e) {
+    if (e.target.tagName === 'OPTION') {
+      const option = e.target;
+      // const selectedOption = option.selected;
+      
+      const optionValue = option.value;
+      // console.log(optionValue);
+      
+      return optionValue;
+  
+    }
+  })
+}
 function showMessegeAlert ( alert, message, error = false, time = 3000 ) {
   alert.classList.add(`alert-${ error ? 'danger' : 'success' }`);
   alert.classList.remove(`alert-${ error ? 'success' : 'danger' }`);
@@ -199,7 +215,7 @@ async function urlRols() {
 }
 const isSession = () => {
  if (!email && url !== `${url}/login.html`) return window.location.href = `${ url }/login.html`;
- setTimeout(() => urlRols(), 50);
+//  setTimeout(() => urlRols(), 50);
 }
 function noLogin() {
   const page = location.href.replace(url, "");

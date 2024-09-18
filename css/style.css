@@ -41,9 +41,9 @@ body{
 }
 
 .btn{
-  margin-left: 2px;
+  /* margin-left: 4px; */
   background-color: black;
-  border-color: #FFD600;
+  border-color: #f8f9fa;
   color: white;
   border-radius: 2rem;
 }

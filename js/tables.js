@@ -57,7 +57,7 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `tables?ubication=${1}`);
+  const registers = await consulta( api + `tables?ubication=${ubicationId}`);
   localStorage.setItem("tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
   localStorage.setItem("tablesSearch",  JSON.stringify(registers.data ));
   printList( registers.data );
@@ -141,6 +141,6 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 
 // Al abrir la pagina
 window.addEventListener("load", async () => {
-  await onLoadSite();
-  await showOptions('ubication', api + `ubication?=commune${commune}`);
+  await onLoadSite();  
+  await showOptions('ubication', api + `ubication?commune=${communeId}`);
 });
