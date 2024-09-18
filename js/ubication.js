@@ -62,7 +62,7 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `ubication?commune=${country}`);
+  const registers = await consulta( api + `ubication?commune=${communeId}`);
   localStorage.setItem("ubication",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
   localStorage.setItem("ubicationSearch",  JSON.stringify(registers.data ));
   printList( registers.data );

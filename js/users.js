@@ -19,7 +19,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'ID', 'Nombre', 'Correo', 'Rol', 'Direccion', 'Telefono', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'ID', 'Nombre', 'Correo', 'Rol', 'Telefono', 'Habilitado', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -33,6 +33,7 @@ const codeInput = document.getElementById('code');
 const phoneInput = document.getElementById('phone');
 const nationalityInput = document.getElementById('nationality');
 const communeInput = document.getElementById('commune');
+const ubicationInput = document.getElementById('ubication');
 const roleInput = document.getElementById('rol');
 const enabledInput = document.getElementById('enabled');
     
@@ -44,17 +45,16 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, email, address, code, phone, role_name, enabled } = data[i];
+    const { id, name, email,  code, phone, role_name, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
-    const phoneComplete = phone ? `${code + phone.toString()}` : '-';
+    const phoneComplete = phone ? `+${code + phone.toString()}` : '-';
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ id, name, email, role_name, address, phoneComplete, showBadgeBoolean(enabled), showbtnCircle(actions)].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ id, name, email, role_name, phoneComplete, showBadgeBoolean(enabled), showbtnCircle(actions)].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
-  // paginado( Math.ceil( data.length / limit ) );
 }
 
 // Show all registers in the table
@@ -76,6 +76,7 @@ const sendInfo = async (uid = '', action = 'CREATE'|'EDIT') => {
     role: roleInput.value,
     country_id: nationalityInput.value,
     commune_id: communeInput.value,
+    ubication_id: ubicationInput.value,
     enabled :enabled.value,
     user: userId
   }
@@ -94,9 +95,7 @@ async function showModalCreateOrEdit( id_info ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'user/' + id_info );  
-  console.log(data);
-  
+  const data = await consulta( api + 'user/' + id_info );    
   const { id, name, email, role, address, country_id, commune_id, code, phone, enabled } = data;
 
   idInput.value = id;
@@ -108,6 +107,7 @@ async function showModalCreateOrEdit( id_info ) {
   roleInput.value = role;
   nationalityInput.value = country_id;
   communeInput.value = commune_id;
+  ubicationInput.value = commune_id;
   enabledInput.value = enabled;
 
   myModal.show();
@@ -119,8 +119,9 @@ function clearForm() {
   codeInput.value = codeCurrent;
   nationalityInput.value = '';
   communeInput.value = '';
+  ubicationInput.value = '';
   enabledInput.value = true;
-  roleInput.value = 1;
+  roleInput.value = '';
 }
 
 btnNewRegister.addEventListener('click', () => {
@@ -160,6 +161,7 @@ window.addEventListener("load", async () => {
   await onLoadSite()
   await showOptions('rol', api + `role`);
   await showOptions('nationality', api + `country`);
-  await showOptions('commune', api + `commune?country=${country}`);
+  await showOptions('commune', api + `commune?country=${ country }`);
+  await showOptions('ubication', api + `ubication?commune=${ communeId }`);
   await showOptionsCode('code');
 });

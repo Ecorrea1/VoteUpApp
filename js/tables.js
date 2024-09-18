@@ -142,5 +142,5 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
-  await showOptions('ubication', api + `ubication?=commune${1}`);
+  await showOptions('ubication', api + `ubication?=commune${commune}`);
 });

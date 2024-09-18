@@ -22,6 +22,7 @@ const codeInput = document.getElementById('code');
 const phoneInput = document.getElementById('phone');
 const nationalityInput = document.getElementById('nationality');
 const communeInput = document.getElementById('commune');
+const ubicationInput = document.getElementById('ubication');
 const roleInput = document.getElementById('rol');
     
 
@@ -45,6 +46,7 @@ const sendInfo = async (uid = 0) => {
     role: Number(roleInput.value),
     country_id: Number(nationalityInput.value),
     commune_id: Number(communeInput.value),
+    ubication_id: Number(ubicationInput.value),
     user: userId
   }
   
@@ -57,13 +59,15 @@ const sendInfo = async (uid = 0) => {
 
 async function showModalCreateOrEdit() {
   const data = JSON.parse(localStorage.getItem( 'user' ));
-  const { id, name, email, role, address, country_id, commune_id, code, phone } = data;
+  const { id, name, email, role, address, country_id, commune_id, ubication_id, code, phone } = data;
+  console.log(data);
   
-  localStorage.setItem("email", email);
-  localStorage.setItem("name", name);
-  localStorage.setItem("role", role);
-  localStorage.setItem("country", country_id);
-  localStorage.setItem("commune", commune_id);
+  // localStorage.setItem("email", email);
+  // localStorage.setItem("name", name);
+  // localStorage.setItem("role", role);
+  // localStorage.setItem("country", country_id);
+  // localStorage.setItem("commune-id", commune_id);
+  // localStorage.setItem("ubication-id", ubication_id);
 
   idInput.value = id;
   nameInput.value =  name;
@@ -71,11 +75,12 @@ async function showModalCreateOrEdit() {
   emailInput.value =  email;
   codeInput.value = code;
   phoneInput.value = phone;
-  roleInput.value = role;
+  roleInput.value = role.id;
   nationalityInput.value = country_id;
   communeInput.value = commune_id;
+  ubicationInput.value = ubication_id;
 
-  myModal.show();
+  // myModal.show();
 }
 function clearForm() {
   formRegister.reset();
@@ -105,6 +110,7 @@ window.addEventListener("load", async () => {
   await showOptions('rol', api + `role`);
   await showOptions('nationality', api + `country`);
   await showOptions('commune', api + `commune?country=${country}`);
+  await showOptions('ubication', api + `ubication?commune=${communeId}`);
   await showOptionsCode('code');
   await showModalCreateOrEdit()
 });

@@ -37,11 +37,6 @@ const communeInput = document.getElementById('commune');
 const eventInput = document.getElementById('event');
 const enabledInput = document.getElementById('enabled');
 
-// async function paginado( paginas, limit = 10){
-//   const totalPages =  paginas > 32 ? 32 : paginas
-//   for (let index = 0; index < totalPages; index++ ) document.getElementById("indice").innerHTML+= `<li class="page-item"><button class="page-link" onclick="printList(${ index * limit })">${ index + 1}</button></li>`;
-// }
-    
 const printList = async ( data, limit = 10 ) => {
   table.innerHTML = "";
   if( data.length === 0 || !data ) {
@@ -67,7 +62,7 @@ const printList = async ( data, limit = 10 ) => {
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `candidates?commune=${commune}`);
+  const registers = await consulta( api + `candidates?commune=${communeId}`);
 //   localStorage.setItem("candidates",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
   localStorage.setItem("candidates",  JSON.stringify(registers.data ));
   printList( registers.data );
@@ -133,7 +128,7 @@ function clearForm() {
   nameInput.value = '';
   descriptionInput.value = '';
   tablesInput.value = '';
-  communeInput.value = commune;
+  communeInput.value = communeId;
   enabledInput.value = true;
 }
 
@@ -154,5 +149,5 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 window.addEventListener("load", async () => {
   await onLoadSite();
   await showOptions('commune', api + `commune?country=${country}`);
-  await showOptions('event', api + `event?commune=${commune}`);
+  await showOptions('event', api + `event?commune=${communeId}`);
 });

@@ -142,6 +142,6 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
-  await showOptions('tables', api + `tables?=ubication${1}`);
-  await showOptions('candidates', api + `candidates?=commune${commune}`);
+  await showOptions('tables', api + `tables?=ubication${ubication}`);
+  await showOptions('candidates', api + `candidates?=commune${communeId}`);
 });

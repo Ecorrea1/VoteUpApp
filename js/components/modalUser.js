@@ -81,6 +81,14 @@ class ModalUser extends HTMLElement {
                       </select>
                       <div id="divErrorCommune"></div>
                     </div>
+                    
+                    <div class="col-md-12 ms-auto">
+                      <label for="ubication" class="form-label">Ubicacion</label>
+                      <select class="form-select" id="ubication" name="ubication" >
+                      <option selected disabled value="">Seleccione una Ubicacion</option>
+                      </select>
+                      <div id="divErrorUbication"></div>
+                    </div>
 
                     <div class="col-md-4">
                       <label for="password" class="form-label d-none">Contraseña</label>

@@ -5,7 +5,9 @@ const userId = Number(localStorage.getItem('uid'));
 const role = Number(localStorage.getItem('role'));
 const country = Number(localStorage.getItem('country'));
 const commune = Number(localStorage.getItem('commune'));
+const communeId = Number(localStorage.getItem('commune-id'));
 const ubication = localStorage.getItem('ubication');
+const ubicationId = localStorage.getItem('ubication-id');
 const pages = localStorage.getItem('pages');
 
 const toggleMenu = ( id, enabled = false) => enabled ? document.getElementById( id ).classList.remove('d-none') : document.getElementById( id ).classList.add("d-none");
