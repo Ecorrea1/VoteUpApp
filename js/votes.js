@@ -1,11 +1,9 @@
 "use strict";
-let nameValidator = false;
-let descriptionValidator = false;
+let eventValidator = false;
 let enabledValidator = false;
 let tablesValidator = false;
 
-const divErrorName = document.getElementById('divErrorName');
-const divErrorDescription = document.getElementById('divErrorDescription');
+const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorTables = document.getElementById('divErrorTables');
 const divErrorCommune = document.getElementById('divErrorCommune');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
@@ -22,17 +20,17 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Descripcion', 'total', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Mesa', 'total', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
 
 const formRegister = document.getElementById('createRegister');
 const idInput = document.getElementById('uid');
-const nameInput = document.getElementById('name');
-const descriptionInput = document.getElementById('description');
-const totalInput = document.getElementById('total');
-const ubicationInput = document.getElementById('ubication');
+const eventInput = document.getElementById('event');
+const tablesInput = document.getElementById('tables');
+const candidateInput = document.getElementById('candidate');
+const votesInput = document.getElementById('votes');
 const enabledInput = document.getElementById('enabled');
     
 const printList = async ( data, limit = 10 ) => {
@@ -43,12 +41,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, description, total, enabled } = data[i];
+    const { id, name, table_id, votes } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, description ?? '-', total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, table_id, votes, showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -58,21 +56,21 @@ const printList = async ( data, limit = 10 ) => {
 // Show all registers in the table
 const showData = async () => {
   const registers = await consulta( api + `vote-tables`);
-  localStorage.setItem("tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
-  localStorage.setItem("tablesSearch",  JSON.stringify(registers.data ));
+  localStorage.setItem("vote-tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
+  localStorage.setItem("vote-tables-Search",  JSON.stringify(registers.data ));
   printList( registers.data );
 }
 
 
 const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
-  nameValidator = validateAllfields(nameInput, divErrorName);
-  if (!nameValidator) return console.log('Ingrese Nombre');
+  eventValidator = validateAllfields(eventInput, divErrorEvent);
+  if (!eventValidator) return console.log('Ingrese un evento');
   
   const data = {
-    name: nameInput.value.toUpperCase(),
-    description: descriptionInput.value,
-    ubication_id: Number(ubicationInput.value),
-    total: Number(totalInput.value),
+    event_id: Number(eventInput.value),
+    table_id: Number(tablesInput.value),
+    candidate_id: Number(candidateInput.value),
+    votes: Number(votesInput.value),
     enabled :enabled.value,
     user: userId
   }
@@ -106,24 +104,24 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('save_register', false);
   
   const data = await consulta( api + 'vote-tables/' + uid );    
-  const { name, description, total, ubication_id, enabled } = data;
+  const { event_id, table_id, candidate_id, votes, enabled } = data;
 
   idInput.value = uid;
-  nameInput.value =  name;
-  descriptionInput.value = description ?? '';
-  totalInput.value = total;
-  ubicationInput.value = ubication_id;
+  eventInput.value = event_id;
+  tablesInput.value = table_id;
+  candidateInput.value = candidate_id;
+  votesInput.value = votes;
   enabledInput.value = enabled;
 
   myModal.show();
 }
 function clearForm() {
   idInput.value = '';
-  nameInput.value = '';
-  descriptionInput.value = '';
-  totalInput.value = 0;
-  ubicationInput.value = '';
-  enabledInput.value = true;
+  eventInput.value = '';
+  tablesInput.value = '';
+  candidateInput.value = '';
+  votesInput.value = 0;
+  // enabledInput.value = true;
 }
 
 btnNewRegister.addEventListener('click', () => {
@@ -142,6 +140,7 @@ btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.v
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
-  await showOptions('tables', api + `tables?=ubication${ubication}`);
-  await showOptions('candidates', api + `candidates?=commune${communeId}`);
+  await showOptions('event', `${api}event?commune=${communeId}`);
+  await showOptions('tables', `${api}tables?ubication=${ubication}`);
+  await showOptions('candidate', `${api}candidates?commune=${communeId}`);
 });
