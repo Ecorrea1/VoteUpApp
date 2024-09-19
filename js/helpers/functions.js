@@ -10,6 +10,11 @@ const ubication = localStorage.getItem('ubication');
 const ubicationId = localStorage.getItem('ubication-id');
 const pages = localStorage.getItem('pages');
 
+
+const updateStore = (id, data, jsonStrinfy = false) => {
+  localStorage.setItem( id, jsonStrinfy ? JSON.stringify(data) : data ); 
+}
+
 const toggleMenu = ( id, enabled = false) => enabled ? document.getElementById( id ).classList.remove('d-none') : document.getElementById( id ).classList.add("d-none");
 
 const showBadgeBoolean = (enabled = 1) => `<span class="badge text-bg-${ enabled == 1 ? 'success' : 'danger' }">${ enabled ? 'ACTIVADO' : 'DESACTIVADO' }</span>`
