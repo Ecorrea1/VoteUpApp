@@ -8,6 +8,7 @@ const inputPass = document.getElementById('input-pass');
 
 const labelErrorEmail = document.getElementById('divErrorEmail');
 const labelErrorPass = document.getElementById('divErrorPass');
+const labelErrorResponse = document.getElementById('divErrorResponse');
 
 const checkRememberMe = document.getElementById('remember-me');
 const btnAccess = document.getElementById('btn-access');
@@ -18,8 +19,11 @@ function showAlert(message) {
   element.innerHTML = message;
 }
 function clearForm(){
-  inputEmail.value= "";
-  inputPass.value="";
+  inputEmail.value = "";
+  inputPass.value = "";
+  labelErrorEmail.innerHTML = "";
+  labelErrorPass.innerHTML = "";
+  labelErrorResponse.innerHTML = "";
 }
 
 const sendSession = async ( data) => {  
@@ -30,6 +34,14 @@ const sendSession = async ( data) => {
   })
   .then((data)=> data.json())
   .then(response => {
+
+    // Como saber el status de el response ?
+      if (!response.ok) {
+        labelErrorResponse.innerHTML = 'Ingrese correctamente su correo o contraseña';
+        console.log(response);
+        // showMessegeAlert(element, response.msg, true);
+        return false;
+      }
 
       if (response.data.reset_pass == true ){
         const {id, reset_pass} = response.data;
@@ -55,7 +67,7 @@ const sendSession = async ( data) => {
     }
   )
   .catch(err => {
-     console.error(err);
+    console.error(err);
     return false;
   });
 }
@@ -70,7 +82,7 @@ async function sendInfo(){
   });
   
   const result =  await sendSession(data);
-  if(!result) return showMessegeAlert(element, 'Hay problemas al iniciar sesion', true);  
+  if(!result) return;  
   if(JSON.parse(localStorage.getItem("reset"))) return location.replace( url + '/recovery.html');
   showMessegeAlert(element, 'Iniciando sesion');
   location.replace( url + '/index.html');
@@ -95,17 +107,20 @@ btnAccess.addEventListener('click', async (e) => {
 
 window.addEventListener("load", async() => {
 
-  const response = await fetch( api + 'auth/SVUP' , {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json'},
-  });
-
-  if(!response.ok){
-    const userData = await response.json();
-    console.log(userData);
-  }
-
-  console.log('Servidor corriendo');
+  await fetch( api + 'auth/SVUP', { method: 'GET', headers: { 'Content-Type': 'application/json'}})
+  .then(response => {
+    if (response.ok) {
+      console.log('Servidor corriendo');
+      // const resp = response.json();
+      // console.log('response', resp);
+    }
+  })
+  .finally(() => {
+    const fader = document.getElementById('fader');
+    fader.classList.add("close");
+    fader.style.display = 'none';   
+  })
+  .catch((e) => console.error(e));
 
   const userLogged = localStorage.getItem('email');
   if(userLogged) return window.location.href = `${url}/index.html`
