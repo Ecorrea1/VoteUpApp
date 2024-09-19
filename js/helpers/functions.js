@@ -81,9 +81,15 @@ function showMessegeAlert ( alert, message, error = false, time = 3000 ) {
   alert.style.display = 'block';
   setTimeout(() => alert.style.display = 'none', time);
 }
-function showError( divInput, divError, messageError = '', show = true ) {
-  divInput.style.borderColor = show ? '#ff0000' : 'hsl(270, 3%, 87%)'
+function showError( divInput = '', divError, messageError = '', show = true, timer = false ) {
+  if(divInput) divInput.style.borderColor = show ? '#ff0000' : 'hsl(270, 3%, 87%)'
   divError.innerText = messageError;
+  if(timer){
+    const time = 2000;
+    divError.style.display = 'block';
+    if(divInput) setTimeout(() => divInput.style.borderColor = 'hsl(270, 3%, 87%)', time);
+    setTimeout(() => divError.style.display = 'none', time);
+  }
 }
 function verifyIsFilled( input, divError ) {
   divError.style.display = input.value == '' ?  'block' : 'none';
@@ -98,26 +104,29 @@ function validateNumber(input) {
   return regex.test(input.value) ? true : false;
 }
 function validateAllfields( divInput, divError, fieldNumber = false ) {
-  if(verifyIsFilled(divInput, divError)){
+  
+  let isFilled = verifyIsFilled(divInput, divError);
+  
+  if (isFilled) {
+    let isNumber = validateNumber(divInput);
+    let isLetters = validateLetters(divInput);
+    
     if (fieldNumber) {
-      if (validateNumber(divInput)) {
-        showError(divInput, divError, '', false);
-        return true;
-      } 
-      showError(divInput, divError, 'Solo se permiten numeros', true);
-      return false;
+      
+      const resultNumber = isNumber ? false : true;
+      showError(divInput, divError, isNumber ? '': 'Solo se permiten numeros', resultNumber );
+      return isNumber;
+      
     } else {
-      if(validateLetters(divInput)) {
-        showError(divInput, divError, '', false);
-        return true;
-      }
-      showError(divInput, divError, 'Solo se permiten letras', true);
-      return false;
+      const resultLetters = isLetters ? false : true;
+      showError(divInput, divError, isLetters ? '' : 'Solo se permiten letras', resultLetters);
+      return isLetters;
     }
-  } else {
-    showError(divInput, divError, 'Este campo es obligatorio');
-    return false;
-  }
+  } 
+
+  showError(divInput, divError, 'Este campo es obligatorio', true);
+  return false;
+
 }
 const showTitlesTable = () => {
   let titles = '';

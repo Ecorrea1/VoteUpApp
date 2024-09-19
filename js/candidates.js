@@ -53,7 +53,7 @@ const printList = async ( data, limit = 10 ) => {
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ numberCandidate, name, namePacto,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ numberCandidate, name, namePacto || '-',  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -116,7 +116,7 @@ async function showModalCreateOrEdit( uid ) {
 
   idInput.value = uid;
   nameInput.value =  name;
-  namePactoInput.value = namePacto ?? '';
+  namePactoInput.value = namePacto || '';
   numberCandidateInput.value = numberCandidate;
   communeInput.value = commune_id;
   enabledInput.value = enabled;

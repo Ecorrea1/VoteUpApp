@@ -25,7 +25,7 @@ class ModalVotes extends HTMLElement {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-
+                  <div id="divMessage"></div>
                   <div class="col-md-12 ms-auto">
                     <label for="event" class="form-label">Evento</label>
                     <select class="form-select" id="event" name="event" >
@@ -39,7 +39,7 @@ class ModalVotes extends HTMLElement {
                     <select class="form-select" id="tables" name="tables" >
                     <option selected disabled value="">Seleccione una Mesa</option>
                     </select>
-                    <div id="divErrorUbication"></div>
+                    <div id="divErrorTables"></div>
                   </div>
               
                 </div>
@@ -57,6 +57,7 @@ class ModalVotes extends HTMLElement {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
+                  <div id="divMessage"></div>
                  <form class="row g-2 container" id="createRegister">
 
                   <div class="col-md-12 ms-auto">

@@ -22,7 +22,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Descripcion', 'total', 'Habilitado', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Descripcion', 'Total', 'Habilitado', 'Acciones'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -48,7 +48,7 @@ const printList = async ( data, limit = 10 ) => {
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, description ?? '-', total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, description || '-', total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -110,7 +110,7 @@ async function showModalCreateOrEdit( uid ) {
 
   idInput.value = uid;
   nameInput.value =  name;
-  descriptionInput.value = description ?? '';
+  descriptionInput.value = description || '';
   totalInput.value = total;
   ubicationInput.value = ubication_id;
   enabledInput.value = enabled;

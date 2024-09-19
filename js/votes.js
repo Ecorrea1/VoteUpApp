@@ -1,10 +1,11 @@
 "use strict";
 
 let votesRealTime = [];
-let candiadateValidator = false;
+let candidateValidator = false;
 let eventValidator = false;
-let enabledValidator = false;
 let tablesValidator = false;
+let enabledValidator = false;
+
 let selectedCandidate = 0;
 let selectedTable = 0;
 let selectedEvent = 0;
@@ -12,11 +13,11 @@ let selectedEvent = 0;
 const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorCandidate = document.getElementById('divErrorCandidate');
 const divErrorTables = document.getElementById('divErrorTables');
-const divErrorCommune = document.getElementById('divErrorCommune');
 const divErrorEnabled = document.getElementById('divErrorEnabled');
 
 // Show Alert
 const alertMessage = document.getElementById('alerts');
+const divMessage = document.getElementById('divMessage');
 
 const btnNewRegister =document.getElementById('btn_create_register');
 const btnEditRegisterAction =document.getElementById('btnEditRegister');
@@ -27,7 +28,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Mesa', 'total', 'Acciones'];
+const titlesTable = [ 'Nombre', 'Mesa', 'total'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -53,7 +54,7 @@ const printList = async ( data, limit = 10 ) => {
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, table_name, votes, showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -71,8 +72,13 @@ const showData = async () => {
 
 const sendInfo = async (id = '', action = 'CREATE'|'EDIT') => {
 
-  // eventValidator = validateAllfields(eventInput, divErrorEvent);
-  // if (!eventValidator) return console.log('Ingrese un evento');
+  eventValidator = validateAllfields(eventInput, divErrorEvent, true);
+  tablesValidator = validateAllfields(tablesInput, divErrorTables, true);
+  candidateValidator = validateAllfields(candidateInput, divErrorCandidate, true);
+  
+  if (!eventValidator) return console.log(`Ingrese un evento ${eventValidator}`);
+  if (!tablesValidator) return console.log('Ingrese una mesa');
+  if (!candidateValidator) return console.log(`Ingrese un candidato ${candidateValidator}`);
   
   const data = {
     event_id: Number(selectedEvent),
@@ -83,21 +89,22 @@ const sendInfo = async (id = '', action = 'CREATE'|'EDIT') => {
     user: userId
   }
 
-  const result = votesRealTime.find(item => 
+  const findDuplicateData = votesRealTime.find(item => 
     item.event_id === data.event_id &&
     item.table_id === data.table_id &&
     item.candidate_id === data.candidate_id
     // item.votes === votesRealTime.votes
   );
   
-  if (result) return showError(candidateInput, divErrorCandidate, 'Estas ingresando la misma mesa con el mismo candidato');
-  // const result = await createEditData( data, id );
-  // if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
+  if (findDuplicateData) return showError('', divMessage, 'ESTAS INGRESANDO LA MISMA MESA Y CANDIDATO', false, true);
   
-  // await showData();
-  bootstrap.Modal.getInstance(modalRegister).hide();
-  document.querySelector(".modal-backdrop").remove();
-  // showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
+  const result = await createEditData( data, id );
+  if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
+  showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
+  showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
+  await showData();
+  // bootstrap.Modal.getInstance(modalRegister).hide();
+  // document.querySelector(".modal-backdrop").remove();
 }
 
 const createEditData = async ( data, uid = '') => {  
