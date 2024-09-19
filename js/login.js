@@ -109,11 +109,14 @@ window.addEventListener("load", async() => {
 
   await fetch( api + 'auth/SVUP', { method: 'GET', headers: { 'Content-Type': 'application/json'}})
   .then(response => {
-    if (response.ok) {
-      console.log('Servidor corriendo');
-      // const resp = response.json();
-      // console.log('response', resp);
+    if (!response.ok) {
+      console.log('Ocurrio algun problema con el servidor');
+      showMessegeAlert(element, 'Ocurrio algun problema con el servidor - Contacte con soporte', true);
+      
     }
+    console.log('Servidor corriendo');
+    // const resp = response.json();
+    // console.log('response', resp);
   })
   .finally(() => {
     const fader = document.getElementById('fader');
