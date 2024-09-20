@@ -111,14 +111,17 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'candidates/' + uid );    
-  const { name, namePacto, numberCandidate, commune_id, enabled } = data;
+  const response = await consulta( api + 'candidates/' + uid ); 
+  const { ok, msg, data } = response; 
+  if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);   
+  const { name, namePacto, numberCandidate, event_id, commune_id, enabled } = data;
 
   idInput.value = uid;
   nameInput.value =  name;
   namePactoInput.value = namePacto || '';
   numberCandidateInput.value = numberCandidate;
   communeInput.value = commune_id;
+  eventInput.value = event_id;
   enabledInput.value = enabled;
 
   myModal.show();

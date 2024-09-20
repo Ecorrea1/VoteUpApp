@@ -17,7 +17,6 @@ const pageItem = document.getElementsByClassName('page-item');
 
 
 const printList = async ( data, page = currentPage, total = 1) => {
-    console.log(data);
     
   table.innerHTML = "";
   if( data.length === 0 || !data ) {
@@ -25,6 +24,7 @@ const printList = async ( data, page = currentPage, total = 1) => {
     return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
   }
 
+  let totalVotes = 0;
   for (const i in data ) {
     const { id, event_name, name, ubication_name, table_name, votes } = data[i];
     // const actions = [
@@ -34,7 +34,12 @@ const printList = async ( data, page = currentPage, total = 1) => {
     const customRow = `<td>${ [ event_name ,name, ubication_name, table_name, votes ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
+    totalVotes += votes;
   }
+  
+//   document.getElementById('total-votes').innerText = totalVotes;
+  console.log('Total de votos: ' + totalVotes);
+  
   // Crear y mostrar paginación
   createPagination(total, page);
 

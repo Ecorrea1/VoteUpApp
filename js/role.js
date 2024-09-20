@@ -99,8 +99,10 @@ const createEditCristal = async ( data, uid = '') => {
 
 async function showModalCreateOrEdit( uid, btnAction = 'CREATE' | 'EDIT' | 'SHOW' ) {
     formRegister.reset();
-  
-    const data = await consulta( api + 'role/' + uid );
+    
+    const response = await consulta( api + 'role/' + uid );
+    const { ok, msg, data } = response; 
+    if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);
     toggleMenu('edit_register', true);
     toggleMenu('save_register', false);
     

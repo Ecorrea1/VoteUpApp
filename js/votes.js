@@ -9,6 +9,8 @@ let enabledValidator = false;
 let selectedCandidate = 0;
 let selectedTable = 0;
 let selectedEvent = 0;
+let currentPage = 1;
+let limitInfo = 10;
 
 const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorCandidate = document.getElementById('divErrorCandidate');
@@ -41,7 +43,7 @@ const candidateInput = document.getElementById('candidate');
 const votesInput = document.getElementById('votes');
 const enabledInput = document.getElementById('enabled');
     
-const printList = async ( data, limit = 10 ) => {
+const printList = async ( data, page = currentPage, total = 1 ) => {
   table.innerHTML = "";
   if( data.length === 0 || !data ) {
     showMessegeAlert( alertMessage, 'No se encontraron registros', true );
@@ -58,15 +60,17 @@ const printList = async ( data, limit = 10 ) => {
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
-  // paginado( Math.ceil( data.length / limit ) );
+  // Crear y mostrar paginación
+  createPagination(total, page);
 }
 
 // Show all registers in the table
-const showData = async () => {
-  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}`);
-  localStorage.setItem("vote-tables",  JSON.stringify(registers.data.filter((e => e.enabled == true))) );
-  localStorage.setItem("vote-tables-Search",  JSON.stringify(registers.data ));
-  printList( registers.data );
+const showData = async (current = currentPage) => {
+  currentPage = current;
+  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&page=${current}&limit=${limitInfo}`);
+  const { data, page, total } = registers;
+  localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
+  printList( data, page, total );
 }
 
 

@@ -29,7 +29,9 @@ const ubicationInput = document.getElementById('ubication');
 
 // Show all registers in the table
 const showData = async () => {
-  const data = await consulta( api + `user/${ userId }`);
+  const response = await consulta( api + `user/${ userId }`);
+  const { ok, msg, data } = response; 
+    if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);
   updateStore('user', data, true);
   const { id, name, email, address, commune_id, ubication_id, code, phone } = data;
 
@@ -85,8 +87,10 @@ const showOptionsCode = async ( select, endpoint = 'country') => {
   let options = JSON.parse(localStorage.getItem( select )) || [];
   
   if (!options.length) {
-    const result = await consulta( api + endpoint );
-    options = result.data;
+    const response = await consulta( api + endpoint );  
+    const { ok, msg, data } = response; 
+    if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);
+    options = data;
     localStorage.setItem( select, JSON.stringify( options ));
   }
   // Iteramos sobre el array de opciones

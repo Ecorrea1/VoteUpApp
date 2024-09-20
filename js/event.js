@@ -105,7 +105,9 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'event/' + uid );    
+  const response = await consulta( api + 'event/' + uid );  
+  const { ok, msg, data } = response; 
+  if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);  
   const { name, description, options, commune_id, enabled } = data;
 
   idInput.value = uid;

@@ -95,7 +95,9 @@ async function showModalCreateOrEdit( id_info ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'user/' + id_info );    
+  const response = await consulta( api + 'user/' + id_info );  
+  const { ok, msg, data } = response; 
+  if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);  
   const { id, name, email, role, address, country_id, commune_id, code, phone, enabled } = data;
 
   idInput.value = id;

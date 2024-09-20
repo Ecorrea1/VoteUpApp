@@ -58,9 +58,13 @@ const printList = async ( data, limit = 10 ) => {
 // Show all registers in the table
 const showData = async () => {
   const registers = await consulta( api + `tables?ubication=${ubicationId}`);
+  console.log(registers);
+  
+  const { ok, msg, data } =  registers;
+
   localStorage.setItem("tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
-  localStorage.setItem("tablesSearch",  JSON.stringify(registers.data ));
-  printList( registers.data );
+  localStorage.setItem("tablesSearch",  JSON.stringify( data ));
+  printList( data );
 }
 
 
@@ -105,7 +109,9 @@ async function showModalCreateOrEdit( uid ) {
   toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
-  const data = await consulta( api + 'tables/' + uid );    
+  const response = await consulta( api + 'tables/' + uid ); 
+  const { ok, msg, data } = response; 
+  if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);
   const { name, description, total, ubication_id, enabled } = data;
 
   idInput.value = uid;
