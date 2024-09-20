@@ -10,7 +10,6 @@ const ubication = localStorage.getItem('ubication');
 const ubicationId = localStorage.getItem('ubication-id');
 const pages = localStorage.getItem('pages');
 
-
 const updateStore = (id, data, jsonStrinfy = false) => {
   localStorage.setItem( id, jsonStrinfy ? JSON.stringify(data) : data ); 
 }
@@ -29,18 +28,10 @@ function createPagination(totalPages, currentPage) {
   for (let i = 1; i <= totalPages; i++) {
     const pageButton = document.createElement('button');
     pageButton.textContent = i;
-    pageButton.onclick = () => showTablePagination(i);
+    pageButton.onclick = () => showData(i);
     if (i === currentPage) pageButton.classList.add('active');
     paginationContainer.appendChild(pageButton);
   }
-}
-function paginado( table, limit = 5,  bar = false, counter = true ){
-  const options = {
-    numberPerPage: limit, 
-    goBar: bar, 
-    pageCounter: counter
-  };
-  paginate.init(table, options);
 }
 const showOptions = async ( select, query = api + select ) => {
   const selectElement = document.getElementById( select );

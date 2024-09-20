@@ -39,6 +39,7 @@ class Header extends HTMLElement {
                               <li><a id="url" name="users" class="dropdown-item" href="/users.html">Usuarios</a></li>
                               <li><a id="url" name="candidates" class="dropdown-item" href="/candidates.html">Candidatos</a></li>
                               <li><a id="url" name="votes" class="dropdown-item" href="/votes.html">Registro de votos</a></li>
+                              <li><a id="url" name="dashboard" class="dropdown-item" href="/dashboard.html">Administracion</a></li>
                           </ul>
                       </li>
                       <li class="nav-item dropdown" id="config">
