@@ -171,6 +171,16 @@ document.querySelector(`#save_register`).addEventListener('click', async (e) => 
 
 // btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.value, 'EDIT' ));
 
+candidateInput.addEventListener('change', function(e) {
+  
+  const compareCandidate = JSON.parse(localStorage.getItem('candidate'));
+  const candidateList = compareCandidate.filter((candidate) => candidate.id === Number(this.value));
+ 
+  // Cambiar otro selected con candidateList al momento de hacer click
+ ;
+  eventInput.value = candidateList[0].event_id;
+
+} )
 
 // Al abrir la pagina
 window.addEventListener("load", async () => {

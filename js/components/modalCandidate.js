@@ -57,7 +57,7 @@ class ModalUbications extends HTMLElement {
                   
                   <div class="col-md-6 ms-auto">
                     <label for="event" class="form-label">Evento</label>
-                    <select class="form-select" id="event" name="event" >
+                    <select class="form-select" id="event" name="event" required>
                     <option selected disabled value="">Seleccione un evento</option>
                     </select>
                     <div id="divErrorEvent"></div>
