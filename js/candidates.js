@@ -57,7 +57,7 @@ const printList = async ( data, limit = 10 ) => {
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
-  // paginado( Math.ceil( data.length / limit ) );
+
 }
 
 // Show all registers in the table
@@ -75,11 +75,12 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
   
   const data = {
     name: nameInput.value.toUpperCase(),
-    description: descriptionInput.value,
-    enabled :enabled.value,
-    tables: Number(tablesInput.value),
+    pacto: namePactoInput.value == '' ? false : true,
+    namePacto: namePactoInput.value || '',
+    numberCandidate: numberCandidateInput.value,
     commune_id: Number(communeInput.value),
     event_id: Number(eventInput.value),
+    enabled :enabled.value,
     user: userId
   }
 
@@ -129,10 +130,12 @@ async function showModalCreateOrEdit( uid ) {
 function clearForm() {
   idInput.value = '';
   nameInput.value = '';
-  descriptionInput.value = '';
-  tablesInput.value = '';
+  namePactoInput.value = '';
+  numberCandidateInput.value = '';
   communeInput.value = communeId;
+  eventInput.value = '';
   enabledInput.value = true;
+
 }
 
 btnNewRegister.addEventListener('click', () => {
