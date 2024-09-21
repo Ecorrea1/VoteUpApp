@@ -2,8 +2,7 @@
 
 let currentPage = 1;
 let limitInfo = 10;
-let votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
-
+let votesRealTime = JSON.parse(localStorage.getItem('vote-tables')) || [];
 
 const backgroundColor = [
   'rgba(255, 99, 132, 0.6)',
@@ -13,14 +12,6 @@ const backgroundColor = [
   'rgba(153, 102, 255, 0.6)',
   'rgba(255, 159, 64, 0.6)'
 ];
-// const backgroundColor = [
-//   'rgba(255, 99, 132, 0.2)',
-//   'rgba(54, 162, 235, 0.2)',
-//   'rgba(255, 206, 86, 0.2)',
-//   'rgba(75, 192, 192, 0.2)',
-//   'rgba(153, 102, 255, 0.2)',
-//   'rgba(255, 159, 64, 0.2)'
-// ];
 
 const borderColor = [
   'rgba(255, 99, 132, 1)',
@@ -74,7 +65,7 @@ const showChart = async (chart,data, labels, backgroundColor, borderColor, title
             legend: { position: 'top' },
             tooltip: { callbacks: { label: (tooltipItem) => `Votos: ${tooltipItem.raw}` } },
             subtitle: { display: false, text: 'Custom Chart Subtitle'},
-            title: { display: true, text: 'Custom Chart Title',  padding: { top: 10, bottom: 30} }
+            title: { display: true, text: title,  padding: { top: 10, bottom: 30} }
         },
         scale : { y: { beginAtZero: typeChart != 'pie' ? false : true } }
     }
@@ -109,25 +100,27 @@ const showData = async (current = currentPage) => {
   const registers = await consulta( api + `vote-tables?page=${current}&limit=${limitInfo}`);
   const { data, page, total } = registers;
   localStorage.setItem("vote-tables", JSON.stringify(data));
-  const votes = votesRealTime.map( ({ votes }) => votes );// Array de votos
+
   const tables = votesRealTime.map( ({ table_name }) => table_name );//Array de mesas
   const candidatesName = votesRealTime.map( ({ name }) => name );// Array de cnadidatos
   const centersName = votesRealTime.map( ({ ubication_name }) => ubication_name );// Array de cnadidatos
-
-  const uniqueCenters = candidatesName.filter((value, index, self) => self.indexOf(value) === index);
+  
+  const uniqueCandidates = candidatesName.filter((value, index, self) => self.indexOf(value) === index);
+  
+  const votes = votesRealTime.map( ({ votes }) => votes );// Array de votos
   const totalVotes = votes.reduce( ( a, b ) => a + b, 0);
 
 
   console.log(totalVotes);
   console.log(tables);
   console.log(centersName);
-  console.log(uniqueCenters);
+  console.log(uniqueCandidates);
   
   console.log(votesRealTime);
   
-  showChart(ctx,[300, 500, 200, 100, 30,700], ['PAULINA BOBADILLA NAVARRETE', 'PABLO ANDRES FUENZALIDA SALAS', 'CESAR VEGA LAZO', 'OSCAR SALDAÑA ABARCA', 'PAOLA ROMERO VALDIVIA', 'JUAN ELVIRO CARRASCO CONTRERAS'], backgroundColor, borderColor, 'Cantidad de Votos', 'bar' )
-  showChart(ctx2,[300, 500, 200, 100, 30,700], ['PAULINA BOBADILLA NAVARRETE', 'PABLO ANDRES FUENZALIDA SALAS', 'CESAR VEGA LAZO', 'OSCAR SALDAÑA ABARCA', 'PAOLA ROMERO VALDIVIA', 'JUAN ELVIRO CARRASCO CONTRERAS'], backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'line' )
-  showChart(ctx3,[300, 500, 200, 100, 30,700], ['PAULINA BOBADILLA NAVARRETE', 'PABLO ANDRES FUENZALIDA SALAS', 'CESAR VEGA LAZO', 'OSCAR SALDAÑA ABARCA', 'PAOLA ROMERO VALDIVIA', 'JUAN ELVIRO CARRASCO CONTRERAS'], backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'doughnut' )
+  showChart(ctx,[300, 500, 200, 100, 30,700], uniqueCandidates , backgroundColor, borderColor, 'Cantidad de Votos', 'bar' )
+  showChart(ctx2,[300, 500, 200, 100, 30,700], uniqueCandidates, backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'line' )
+  showChart(ctx3,[300, 500, 200, 100, 30,700], uniqueCandidates, backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'doughnut' )
 
   printList( data, page, total );
 }

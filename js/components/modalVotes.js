@@ -27,6 +27,14 @@ class ModalVotes extends HTMLElement {
               <div class="modal-body">
                 <div id="divMessage"></div>
                 <form class="row g-2 container" id="createRegister">
+
+                  <div class="col-md-12 ms-auto">
+                    <label for="tables" class="form-label">Mesas</label>
+                    <select class="form-select" id="tables" name="tables" >
+                    <option selected disabled value="">Seleccione una Mesa</option>
+                    </select>
+                    <div id="divErrorTables"></div>
+                  </div>
                   
                   <div class="col-md-12 ms-auto">
                     <label for="candidate" class="form-label">Candidato</label>
@@ -42,15 +50,6 @@ class ModalVotes extends HTMLElement {
                     <option selected disabled value="">Seleccione un Evento</option>
                     </select>
                     <div id="divErrorEvent"></div>
-                  </div>
-
-                  
-                  <div class="col-md-12 ms-auto">
-                    <label for="tables" class="form-label">Mesas</label>
-                    <select class="form-select" id="tables" name="tables" >
-                    <option selected disabled value="">Seleccione una Mesa</option>
-                    </select>
-                    <div id="divErrorTables"></div>
                   </div>
 
                   <div class="col-md-12">

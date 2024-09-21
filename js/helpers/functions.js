@@ -124,9 +124,11 @@ const showTitlesTable = () => {
   for (const i in titlesTable ) titles += `<th>${ titlesTable[i] }</th>`;
   tableTitles.innerHTML = `<tr>${ titles }</tr>`;
 }
-async function consulta( url ) {
+async function consulta( url) {
   try {
-    const response = await fetch(url).catch((error)=>{ console.log('Hubo un error: ', error )});
+    const response = await fetch(url)
+    // .finally(() => {})
+    .catch((error)=>{ console.log('Hubo un error: ', error )});
     const data = await response.json();
     return data;
   } catch (err) {
@@ -219,7 +221,10 @@ async function urlRols() {
   }
 }
 const isSession = () => {
- if (!email && url !== `${url}/login.html`) return window.location.href = `${ url }/login.html`;
+ if (!email && url !== `${url}/login.html`) {
+    localStorage.clear();
+    return window.location.href = `${ url }/login.html`;
+  }
 //  setTimeout(() => urlRols(), 50);
 }
 function noLogin() {
