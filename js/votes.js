@@ -211,22 +211,16 @@ formRegister.addEventListener('submit', function(e){
 
 // } )
 
-
-
-
-
-
-  
-
   tablesInput.addEventListener("change", async function(){
     selectedTable = this.value;
     divDinamicInputs.innerHTML = "";
-    let response = JSON.parse(localStorage.getItem('candidates')) || [];
-    if(response == []){
+    // let response = JSON.parse(localStorage.getItem('candidates')) || [];
+    let response = [];
+    // if(response == []){
       const result = await consulta(`${api}candidates?commune=${communeId}`);
       response = result.data;
-      localStorage.setItem("candidates",  JSON.stringify(result.data) );
-    }
+      // localStorage.setItem("candidates",  JSON.stringify(result.data) );
+    // }
    
     response.forEach(loadingCandidates);  
   });
