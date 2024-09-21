@@ -1,6 +1,6 @@
 "use strict";
 
-let votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
+let votesRealTime = JSON.parse(localStorage.getItem('vote-tables')) || [];
 let candidateValidator = false;
 let eventValidator = false;
 let tablesValidator = false;
