@@ -1,6 +1,6 @@
 "use strict";
 
-let votesRealTime = [];
+let votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
 let candidateValidator = false;
 let eventValidator = false;
 let tablesValidator = false;
@@ -70,6 +70,13 @@ const showData = async (current = currentPage) => {
   const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&page=${current}&limit=${limitInfo}`);
   const { data, page, total } = registers;
   localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
+
+  //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
+  const votes = votesRealTime.map( ({ votes }) => votes );
+  const totalVotes = votes.reduce( ( a, b ) => a + b, 0);
+  console.log(totalVotes);
+  
+  
   printList( data, page, total );
 }
 
@@ -160,7 +167,7 @@ btnNewRegister.addEventListener('click', () => {
 document.querySelector(`#save_register`).addEventListener('click', async (e) => {
   e.preventDefault();
   //Comparar la mesa y el candidato con la lista guardada en el localhost
-  votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
+  // votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
   selectedEvent =  eventInput.value;
   selectedTable = tablesInput.value;
   selectedCandidate = candidateInput.value;
