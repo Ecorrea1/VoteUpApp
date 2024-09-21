@@ -221,21 +221,13 @@ formRegister.addEventListener('submit', function(e){
   tablesInput.addEventListener("change", async function(){
     selectedTable = this.value;
     divDinamicInputs.innerHTML = "";
-    const localdata = JSON.parse(localStorage.getItem('candidates')) || [];
-    const response = localdata.length ? localdata : await consulta(`${api}candidates?commune=${communeId}`);
-    if(!localdata.length) localStorage.setItem("candidate",  JSON.stringify(response.data) );
-    
-    // divDinamicInputs.innerHTML = "Cargando .....";
-    // const candidates = data.map((candidate) => {
-    //   return {
-    //       id: candidate.id,
-    //       name: candidate.name,
-    //       commune: candidate.commune,
-    //       event_id: candidate.event_id
-    //     }
-    //   }
-    // );
-
+    let response = JSON.parse(localStorage.getItem('candidates')) || [];
+    if(response == []){
+      const result = await consulta(`${api}candidates?commune=${communeId}`);
+      response = result.data;
+      localStorage.setItem("candidates",  JSON.stringify(response.data) );
+    }
+   
     response.forEach(loadingCandidates);  
   });
 
