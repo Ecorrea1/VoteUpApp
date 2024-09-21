@@ -225,7 +225,7 @@ formRegister.addEventListener('submit', function(e){
     if(response == []){
       const result = await consulta(`${api}candidates?commune=${communeId}`);
       response = result.data;
-      localStorage.setItem("candidates",  JSON.stringify(response.data) );
+      localStorage.setItem("candidates",  JSON.stringify(result.data) );
     }
    
     response.forEach(loadingCandidates);  
