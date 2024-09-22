@@ -37,11 +37,9 @@ const table = document.getElementById('list_row');
 
 const formRegister = document.getElementById('createRegister');
 // const idInput = document.getElementById('uid');
-// const eventInput = document.getElementById('event');
+const eventInput = document.getElementById('event');
 const tablesInput = document.getElementById('tables');
-// const candidateInput = document.getElementById('candidate');
 // const votesInput = document.getElementById('votes');
-// const enabledInput = document.getElementById('enabled');
 const divDinamicInputs = document.getElementById('formBodyDinamic');
     
 const printList = async ( data, page = currentPage, total = 1 ) => {
@@ -156,7 +154,7 @@ async function showModalCreateOrEdit( uid ) {
 }
 function clearForm() {
   // idInput.value = '';
-  // eventInput.value =  selectedEvent || '';
+  eventInput.value =  selectedEvent || 1;
   tablesInput.value = '';
   // candidateInput.value = '';
   // votesInput.value = 0;
@@ -177,92 +175,81 @@ formRegister.addEventListener('submit', function(e){
   // selectedTable = tablesInput.value;
   // selectedCandidate = candidateInput.value;
 
-  // const formulario = formRegister;
-  // const elementos = formulario.elements;
-  // const valores = {};
-  
-  // for (let i = 0; i < elementos.length; i++) {
-  //     const elemento = elementos[i];
-  //     if (elemento.type === 'checkbox') {
-  //         valores[elemento.name] = elemento.checked;
-  //     } else {
-  //         valores[elemento.name] = elemento.value;
-  //     }
-  // }
-  
-  // console.table(valores);
-
   const formData = new FormData(this);
-  const response = Object.fromEntries(formData.entries());
-  console.log(response);  
+  const data = Object.fromEntries(formData.entries());
 
+  const result = Object.keys(data)
+  .filter(key => key !== 'tables')
+  .map(key => ({
+    event_id: Number(selectedEvent || data.event),
+    table_id: Number(data.tables),
+    candidate_id: Number(key),
+    votes: Number(data[key]),
+    enabled: true,
+    user: userId
+  }));
+
+  console.log(result);
   // await sendInfo('', 'CREATE');
 });
 
-// btnEditRegister.addEventListener('click', async (e) => await sendInfo( idInput.value, 'EDIT' ));
+eventInput.addEventListener("change", function() {
+  selectedEvent = Number(this.value)
+  tablesInput.value = "";
+  divDinamicInputs.innerHTML = "";  
+}
+);
 
-// candidateInput.addEventListener('change', function() {
-  
-//   const compareCandidate = JSON.parse(localStorage.getItem('candidate'));
-//   const candidateList = compareCandidate.filter((candidate) => candidate.id === Number(this.value));
- 
-//   // Cambiar otro selected con candidateList al momento de hacer click
-//   eventInput.value = candidateList[0].event_id;
-
-// } )
-
-  tablesInput.addEventListener("change", async function(){
-    selectedTable = this.value;
-    divDinamicInputs.innerHTML = "";
-    // let response = JSON.parse(localStorage.getItem('candidates')) || [];
-    let response = [];
-    // if(response == []){
-      const result = await consulta(`${api}candidates?commune=${communeId}`);
-      response = result.data;
-      // localStorage.setItem("candidates",  JSON.stringify(result.data) );
-    // }
-   
-    response.forEach(loadingCandidates);  
-  });
-
-  function loadingCandidates({ id, name }){
-    // const url = 'https://api.github.com/repos/erickperezp/elecciones
-
-      //crear el div que contiene los 2 sub-divs
-      const div_principal = D.create('div');
-      //crear el div para el span e input del nombre
-      const div_nombre = D.create('div');
-  
-      //crear el div para el span e input del apellido
-      const div_apellido = D.create('div');
-  
-      //crear los span de nombre y apellido
-      const span_nombre = D.create('span', { innerHTML: 'Candidato' } );
-      const span_apellido = D.create('span', { innerHTML: 'Votos' });
-  
-      //crear los inputs de nombre y apellido
-      const input_nombre = D.create('input', { type: 'text', name: `${id} - CANDIDATO: ${name}`, autocomplete: 'off', value: `${name}`, disabled: 'disabled', required: 'required'} );
-      const input_apellido = D.create('input', { type: 'number', name: `${id}`, autocomplete: 'off', placeholder: 'Ingrese votos' , required: 'required'});
-  
-      //crear un botoncito de eliminar este div 
-      // const borrar = D.create('a', { href: 'javascript:void(0)', innerHTML: 'x', onclick: function( ){ D.remove(div_principal); } } );
-  
-      //agregar cada etiqueta a su nodo padre
-      D.append(span_nombre, div_nombre);
-      D.append(input_nombre, div_nombre);
-  
-      D.append([span_apellido, input_apellido], div_apellido);
-  
-      D.append([div_nombre, div_apellido], div_principal);
-      
-      //agregar el div del primer comentario al contenedor con id #container
-      D.append(div_principal, D.id('formBodyDinamic') );
+tablesInput.addEventListener("change", async function(){
+  selectedTable = this.value;
+  divDinamicInputs.innerHTML = "";
+  let response = JSON.parse(localStorage.getItem('candidates')) || [];
+  if(response.length === 0){
+    const result = await consulta(`${api}candidates?commune=${communeId}`);
+    // const result = await consulta(`${api}candidates?commune=${communeId}&event=${selectedEvent}`);
+    localStorage.setItem("candidates",  JSON.stringify(result.data) );
   }
+  
+  response = JSON.parse(localStorage.getItem('candidates'));
+  const data = response.filter(e => e.event_id === selectedEvent)
+ 
+  data.forEach(loadingCandidates);  
+});
+
+function loadingCandidates({ id, name }) {
+    //crear el div que contiene los 2 sub-divs
+    const div_principal = D.create('div');
+    //crear el div para el span e input del nombre
+    const div_nombre = D.create('div');
+
+    //crear el div para el span e input del apellido
+    const div_apellido = D.create('div');
+
+    //crear los span de nombre y apellido
+    const span_nombre = D.create('span', { innerHTML: 'Candidato' } );
+    const span_apellido = D.create('span', { innerHTML: 'Votos' });
+
+    //crear los inputs de nombre y apellido
+    const input_nombre = D.create('input', { type: 'text', name: `${id} - CANDIDATO: ${name}`, autocomplete: 'off', value: `${name}`, disabled: 'disabled', required: 'required'} );
+    const input_apellido = D.create('input', { type: 'number', name: `${id}`, autocomplete: 'off', placeholder: 'Ingrese votos' , required: 'required'});
+
+    //crear un botoncito de eliminar este div 
+    // const borrar = D.create('a', { href: 'javascript:void(0)', innerHTML: 'x', onclick: function( ){ D.remove(div_principal); } } );
+
+    //agregar cada etiqueta a su nodo padre
+    D.append(span_nombre, div_nombre);
+    D.append(input_nombre, div_nombre);
+
+    D.append([span_apellido, input_apellido], div_apellido);
+    D.append([div_nombre, div_apellido], div_principal);
+    //agregar el div del primer comentario al contenedor con id #container
+    D.append(div_principal, D.id('formBodyDinamic') );
+}
 
 // Al abrir la pagina
 window.addEventListener("load", async () => {
   await onLoadSite();
-  // await showOptions('event', `${api}event?commune=${communeId}`);
+  await showOptions('event', `${api}event?commune=${communeId}`);
   // await showOptions('candidate', `${api}candidates?commune=${communeId}`);
   await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
 });
