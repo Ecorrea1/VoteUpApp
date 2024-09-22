@@ -66,7 +66,7 @@ const printList = async ( data, page = currentPage, total = 1 ) => {
 // Show all registers in the table
 const showData = async (current = currentPage) => {
   currentPage = current;
-  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&page=${current}&limit=${limitInfo}`, table);
+  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const { data, page, total } = registers;
   localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
 
@@ -80,7 +80,7 @@ const showData = async (current = currentPage) => {
 }
 
 
-const sendInfo = async (id = '', action = 'CREATE'|'EDIT') => {
+const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
 
   // eventValidator = validateAllfields(eventInput, divErrorEvent, true);
   // tablesValidator = validateAllfields(tablesInput, divErrorTables, true);
@@ -89,35 +89,24 @@ const sendInfo = async (id = '', action = 'CREATE'|'EDIT') => {
   // if (!eventValidator) return console.log(`Ingrese un evento ${eventValidator}`);
   // if (!tablesValidator) return console.log('Ingrese una mesa');
   // if (!candidateValidator) return console.log(`Ingrese un candidato ${candidateValidator}`);
-  
-  // const data = {
-  //   event_id: Number(selectedEvent),
-  //   table_id: Number(selectedTable),
-  //   candidate_id: Number(candidateInput.value),
-  //   votes: Number(votesInput.value),
-  //   enabled : true,
-  //   user: userId
-  // }
 
-
-  // formRegister.
-
-  const findDuplicateData = votesRealTime.find(item => 
-    item.event_id === data.event_id &&
-    item.table_id === data.table_id &&
-    item.candidate_id === data.candidate_id
-    // item.votes === votesRealTime.votes
-  );
+  // const findDuplicateData = votesRealTime.find(item => 
+  //   item.event_id === data.event_id &&
+  //   item.table_id === data.table_id &&
+  //   item.candidate_id === data.candidate_id
+  //   // item.votes === votesRealTime.votes
+  // );
   
-  if (findDuplicateData) return showError('', divMessage, 'ESTAS INGRESANDO LA MISMA MESA Y CANDIDATO', false, true);
+  // if (findDuplicateData) return showError('', divMessage, 'ESTAS INGRESANDO LA MISMA MESA Y CANDIDATO', false, true);
   
-  // const result = await createEditData( data, id );
-  // if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
-  // showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
-  // showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
-  // await showData();
-  // bootstrap.Modal.getInstance(modalRegister).hide();
-  // document.querySelector(".modal-backdrop").remove();
+  const result = await createEditData( data, id );
+  if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
+  showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
+  showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
+  await showData();
+  await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
+  bootstrap.Modal.getInstance(modalRegister).hide();
+  document.querySelector(".modal-backdrop").remove();
 }
 
 const createEditData = async ( data, uid = '') => {  
@@ -154,7 +143,7 @@ async function showModalCreateOrEdit( uid ) {
 }
 function clearForm() {
   // idInput.value = '';
-  eventInput.value =  selectedEvent || 1;
+  eventInput.value =  ``;
   tablesInput.value = '';
   // candidateInput.value = '';
   // votesInput.value = 0;
@@ -167,19 +156,13 @@ btnNewRegister.addEventListener('click', () => {
   toggleMenu('save_register', true);
 });
 
-formRegister.addEventListener('submit', function(e){
+formRegister.addEventListener('submit', async function(e){
   e.preventDefault();
-  //Comparar la mesa y el candidato con la lista guardada en el localhost
-  // votesRealTime = JSON.parse(localStorage.getItem('vote-tables'));
-  // selectedEvent =  eventInput.value;
-  // selectedTable = tablesInput.value;
-  // selectedCandidate = candidateInput.value;
-
   const formData = new FormData(this);
   const data = Object.fromEntries(formData.entries());
 
   const result = Object.keys(data)
-  .filter(key => key !== 'tables')
+  .filter(key => key !== 'tables'  && key !== 'event')
   .map(key => ({
     event_id: Number(selectedEvent || data.event),
     table_id: Number(data.tables),
@@ -190,30 +173,33 @@ formRegister.addEventListener('submit', function(e){
   }));
 
   console.log(result);
-  // await sendInfo('', 'CREATE');
+  await sendInfo('', result,'CREATE');
 });
 
 eventInput.addEventListener("change", function() {
   selectedEvent = Number(this.value)
   tablesInput.value = "";
-  divDinamicInputs.innerHTML = "";  
+  divDinamicInputs.innerHTML = "";
 }
 );
 
 tablesInput.addEventListener("change", async function(){
   selectedTable = this.value;
-  divDinamicInputs.innerHTML = "";
-  let response = JSON.parse(localStorage.getItem('candidates')) || [];
-  if(response.length === 0){
-    const result = await consulta(`${api}candidates?commune=${communeId}`);
-    // const result = await consulta(`${api}candidates?commune=${communeId}&event=${selectedEvent}`);
-    localStorage.setItem("candidates",  JSON.stringify(result.data) );
-  }
-  
-  response = JSON.parse(localStorage.getItem('candidates'));
-  const data = response.filter(e => e.event_id === selectedEvent)
- 
-  data.forEach(loadingCandidates);  
+  divDinamicInputs.innerHTML = "Cargando ....";  
+  setTimeout(async() => { 
+
+    let response = JSON.parse(localStorage.getItem('candidates')) || [];
+    if(response.length === 0){
+      const result = await consulta(`${api}candidates?commune=${communeId}`);
+      // const result = await consulta(`${api}candidates?commune=${communeId}&event=${selectedEvent}`);
+      localStorage.setItem("candidates",  JSON.stringify(result.data) );
+    }
+
+    response = JSON.parse(localStorage.getItem('candidates'));
+    const data = response.filter(e => e.event_id === selectedEvent)
+    divDinamicInputs.innerHTML = data.length !== 0 ? "" : "NO HAY DATOS"; 
+    data.length !== 0 ? data.forEach(loadingCandidates) : console.log('no hay datos');
+  }, timer) 
 });
 
 function loadingCandidates({ id, name }) {

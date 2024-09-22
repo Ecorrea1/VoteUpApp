@@ -9,6 +9,7 @@ const communeId = Number(localStorage.getItem('commune-id'));
 const ubication = localStorage.getItem('ubication');
 const ubicationId = localStorage.getItem('ubication-id');
 const pages = localStorage.getItem('pages');
+const timer = Number(localStorage.getItem('timer')) || 500;
 
 const updateStore = (id, data, jsonStrinfy = false) => {
   localStorage.setItem( id, jsonStrinfy ? JSON.stringify(data) : data ); 
