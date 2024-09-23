@@ -57,6 +57,13 @@ body{
   border-radius: 2rem;
 }
 
+.info {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
 .close{
   opacity: 0;
   transition: 1.5;

@@ -52,18 +52,15 @@ const printList = async ( data, limit = 10 ) => {
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
-  // paginado( Math.ceil( data.length / limit ) );
 }
 
 // Show all registers in the table
 const showData = async () => {
-  const registers = await consulta( api + `tables?ubication=${ubicationId}`);
-  console.log(registers);
-  
+  const registers = await consulta( api + `tables`); 
+  // const registers = await consulta( api + `tables?ubication=${ubicationId}`); 
   const { ok, msg, data } =  registers;
 
-  localStorage.setItem("tables",  JSON.stringify(registers.data.filter((e => e.enabled === true))) );
-  localStorage.setItem("tablesSearch",  JSON.stringify( data ));
+  localStorage.setItem("tables",  JSON.stringify( data) );
   printList( data );
 }
 

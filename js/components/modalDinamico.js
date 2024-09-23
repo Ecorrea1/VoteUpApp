@@ -40,8 +40,8 @@ class ModalDinamic extends HTMLElement {
 
 
                     <div class="col-md-12 ms-auto">
-                      <label for="tables" class="form-label">Mesas</label>
-                      <select class="form-select" id="tables" name="tables" required>
+                      <label for="tablesSearch" class="form-label">Mesas</label>
+                      <select class="form-select" id="tablesSearch" name="tablesSearch" required>
                       <option selected disabled value="">Seleccione una Mesa</option>
                       </select>
                       <div id="divErrorTables"></div>

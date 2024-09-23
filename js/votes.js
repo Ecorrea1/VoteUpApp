@@ -1,6 +1,8 @@
 "use strict";
 
 let votesRealTime = JSON.parse(localStorage.getItem('vote-tables')) || [];
+let totalVotes = 0;
+
 let candidateValidator = false;
 let eventValidator = false;
 let tablesValidator = false;
@@ -20,6 +22,7 @@ const divErrorEnabled = document.getElementById('divErrorEnabled');
 // Show Alert
 const alertMessage = document.getElementById('alerts');
 const divMessage = document.getElementById('divMessage');
+const totalVotesInput = document.getElementById('totalVotes');
 
 const btnNewRegister =document.getElementById('btn_create_register');
 const btnEditRegisterAction =document.getElementById('btnEditRegister');
@@ -38,29 +41,34 @@ const table = document.getElementById('list_row');
 const formRegister = document.getElementById('createRegister');
 // const idInput = document.getElementById('uid');
 const eventInput = document.getElementById('event');
-const tablesInput = document.getElementById('tables');
+const tablesInput = document.getElementById('tablesSearch');
 // const votesInput = document.getElementById('votes');
 const divDinamicInputs = document.getElementById('formBodyDinamic');
     
 const printList = async ( data, page = currentPage, total = 1 ) => {
   table.innerHTML = "";
-  if( data.length === 0 || !data ) {
-    showMessegeAlert( alertMessage, 'No se encontraron registros', true );
-    return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
-  }
+  table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">Cargando .....</td></tr>`;
 
-  for (const i in data ) {
-    const { id, name, table_name, votes } = data[i];
-    const actions = [
-      `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
-    ]
-    const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
-    const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
-    table.innerHTML += row;
-  }
-  // Crear y mostrar paginación
-  createPagination(total, page);
+  setInterval(() => {
+    
+    table.innerHTML = "";
+  
+    if( data.length === 0 || !data ) {
+      showMessegeAlert( alertMessage, 'No se encontraron registros', true );
+      return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
+    }
+  
+    for (const i in data ) {
+      const { name, table_name, votes } = data[i];
+      const rowClass  = 'text-right';
+      const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
+      const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
+      table.innerHTML += row;
+    }
+  
+    createPagination(total, page);
+  
+  }, timer); 
 }
 
 // Show all registers in the table
@@ -69,16 +77,12 @@ const showData = async (current = currentPage) => {
   const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const { data, page, total } = registers;
   localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
-
   //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
   const votes = votesRealTime.map( ({ votes }) => votes );
-  const totalVotes = votes.reduce( ( a, b ) => a + b, 0);
-  console.log(totalVotes);
-  
-  
+  totalVotes = votes.reduce( ( a, b ) => a + b, 0);
+  totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
   printList( data, page, total );
 }
-
 
 const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
 
@@ -104,7 +108,7 @@ const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
   showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
   showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
   await showData();
-  await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
+  await showOptions('tablesSearch', `${api}tables?ubication=${ubicationId}&enabled=true`);
   bootstrap.Modal.getInstance(modalRegister).hide();
   document.querySelector(".modal-backdrop").remove();
 }
@@ -152,7 +156,6 @@ function clearForm() {
 
 btnNewRegister.addEventListener('click', () => {
   clearForm();
-  // toggleMenu('edit_register', false);
   toggleMenu('save_register', true);
 });
 
@@ -162,24 +165,25 @@ formRegister.addEventListener('submit', async function(e){
   const data = Object.fromEntries(formData.entries());
 
   const result = Object.keys(data)
-  .filter(key => key !== 'tables'  && key !== 'event')
+  .filter(key => key !== 'tablesSearch'  && key !== 'event')
   .map(key => ({
     event_id: Number(selectedEvent || data.event),
-    table_id: Number(data.tables),
+    table_id: Number(data.tablesSearch),
     candidate_id: Number(key),
     votes: Number(data[key]),
     enabled: true,
     user: userId
   }));
 
-  console.log(result);
   await sendInfo('', result,'CREATE');
+
 });
 
 eventInput.addEventListener("change", function() {
   selectedEvent = Number(this.value)
   tablesInput.value = "";
   divDinamicInputs.innerHTML = "";
+  totalVotesInput.innerHTML = "";
 }
 );
 
@@ -201,7 +205,6 @@ tablesInput.addEventListener("change", async function(){
     data.length !== 0 ? data.forEach(loadingCandidates) : console.log('no hay datos');
   }, timer) 
 });
-
 function loadingCandidates({ id, name }) {
     //crear el div que contiene los 2 sub-divs
     const div_principal = D.create('div');
@@ -236,6 +239,5 @@ function loadingCandidates({ id, name }) {
 window.addEventListener("load", async () => {
   await onLoadSite();
   await showOptions('event', `${api}event?commune=${communeId}`);
-  // await showOptions('candidate', `${api}candidates?commune=${communeId}`);
-  await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
+  await showOptions('tablesSearch', `${api}tables?ubication=${ubicationId}&enabled=true`);
 });
