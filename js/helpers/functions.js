@@ -34,12 +34,14 @@ function createPagination(totalPages, currentPage) {
     paginationContainer.appendChild(pageButton);
   }
 }
-const showOptions = async ( select, query = api + select ) => {
+const showOptions = async ( select, query = '' ) => {
   const selectElement = document.getElementById( select );
   selectElement.value = "";
-  let options = JSON.parse(localStorage.getItem( select )) || [];  
-  if (!options.length) {
-    const result = await consulta( !!query ? query : api + select );
+  const localVariable = localStorage.getItem( select ) 
+  let options = localVariable ? JSON.parse(localVariable) : [];
+  // Como saber si una variable este indefined, vacio, en []
+  if (!options.length || options === undefined) {
+    const result = await consulta( query ? query : `${api}${query}` );
     options = result.data;
     localStorage.setItem( select, JSON.stringify( options ));
   }

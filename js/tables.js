@@ -57,13 +57,12 @@ const printList = async ( data, limit = 10 ) => {
 // Show all registers in the table
 const showData = async () => {
   const registers = await consulta( api + `tables`); 
-  // const registers = await consulta( api + `tables?ubication=${ubicationId}`); 
   const { ok, msg, data } =  registers;
-
+  const filteredData = data.filter( item => item.enabled === true && item.ubication_id == ubicationId)  
   localStorage.setItem("tables",  JSON.stringify( data) );
+  localStorage.setItem("tablesSearch",  JSON.stringify(filteredData));
   printList( data );
 }
-
 
 const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
   nameValidator = validateAllfields(nameInput, divErrorName);

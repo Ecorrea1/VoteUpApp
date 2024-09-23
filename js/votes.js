@@ -10,7 +10,7 @@ let enabledValidator = false;
 
 let selectedCandidate = 0;
 let selectedTable = 0;
-let selectedEvent = 0;
+let selectedEvent = 1;
 let currentPage = 1;
 let limitInfo = 10;
 
@@ -47,28 +47,20 @@ const divDinamicInputs = document.getElementById('formBodyDinamic');
     
 const printList = async ( data, page = currentPage, total = 1 ) => {
   table.innerHTML = "";
-  table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">Cargando .....</td></tr>`;
-
-  setInterval(() => {
     
-    table.innerHTML = "";
-  
-    if( data.length === 0 || !data ) {
-      showMessegeAlert( alertMessage, 'No se encontraron registros', true );
-      return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
-    }
-  
-    for (const i in data ) {
-      const { name, table_name, votes } = data[i];
-      const rowClass  = 'text-right';
-      const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
-      const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
-      table.innerHTML += row;
-    }
-  
-    createPagination(total, page);
-  
-  }, timer); 
+  if( data.length === 0 || !data ) {
+    showMessegeAlert( alertMessage, 'No se encontraron registros', true );
+    return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
+  }
+
+  for (const i in data ) {
+    const { name, table_name, votes } = data[i];
+    const rowClass  = 'text-right';
+    const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
+    const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
+    table.innerHTML += row;
+  }
+  createPagination(total, page); 
 }
 
 // Show all registers in the table
@@ -108,7 +100,7 @@ const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
   showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
   showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
   await showData();
-  await showOptions('tablesSearch', `${api}tables?ubication=${ubicationId}&enabled=true`);
+  await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
   bootstrap.Modal.getInstance(modalRegister).hide();
   document.querySelector(".modal-backdrop").remove();
 }
@@ -147,7 +139,7 @@ async function showModalCreateOrEdit( uid ) {
 }
 function clearForm() {
   // idInput.value = '';
-  eventInput.value =  ``;
+  // eventInput.value =  ``;
   tablesInput.value = '';
   // candidateInput.value = '';
   // votesInput.value = 0;
@@ -163,11 +155,10 @@ formRegister.addEventListener('submit', async function(e){
   e.preventDefault();
   const formData = new FormData(this);
   const data = Object.fromEntries(formData.entries());
-
   const result = Object.keys(data)
-  .filter(key => key !== 'tablesSearch'  && key !== 'event')
+  .filter(key => key !== 'tablesSearch')
   .map(key => ({
-    event_id: Number(selectedEvent || data.event),
+    event_id: Number(selectedEvent),
     table_id: Number(data.tablesSearch),
     candidate_id: Number(key),
     votes: Number(data[key]),
@@ -179,13 +170,13 @@ formRegister.addEventListener('submit', async function(e){
 
 });
 
-eventInput.addEventListener("change", function() {
-  selectedEvent = Number(this.value)
-  tablesInput.value = "";
-  divDinamicInputs.innerHTML = "";
-  totalVotesInput.innerHTML = "";
-}
-);
+// eventInput.addEventListener("change", function() {
+//   selectedEvent = Number(this.value)
+//   tablesInput.value = "";
+//   divDinamicInputs.innerHTML = "";
+//   totalVotesInput.innerHTML = "";
+// }
+// );
 
 tablesInput.addEventListener("change", async function(){
   selectedTable = this.value;
@@ -193,7 +184,7 @@ tablesInput.addEventListener("change", async function(){
   setTimeout(async() => { 
 
     let response = JSON.parse(localStorage.getItem('candidates')) || [];
-    if(response.length === 0){
+    if(response.length === 0 || response=== undefined){
       const result = await consulta(`${api}candidates?commune=${communeId}`);
       // const result = await consulta(`${api}candidates?commune=${communeId}&event=${selectedEvent}`);
       localStorage.setItem("candidates",  JSON.stringify(result.data) );
@@ -228,7 +219,6 @@ function loadingCandidates({ id, name }) {
     //agregar cada etiqueta a su nodo padre
     D.append(span_nombre, div_nombre);
     D.append(input_nombre, div_nombre);
-
     D.append([span_apellido, input_apellido], div_apellido);
     D.append([div_nombre, div_apellido], div_principal);
     //agregar el div del primer comentario al contenedor con id #container
@@ -236,8 +226,8 @@ function loadingCandidates({ id, name }) {
 }
 
 // Al abrir la pagina
-window.addEventListener("load", async () => {
+window.addEventListener("load", async () => {  
   await onLoadSite();
-  await showOptions('event', `${api}event?commune=${communeId}`);
-  await showOptions('tablesSearch', `${api}tables?ubication=${ubicationId}&enabled=true`);
+  // await showOptions('event', `${api}event?commune=${communeId}&enabled=true`);
+  await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
 });

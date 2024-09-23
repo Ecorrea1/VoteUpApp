@@ -31,6 +31,15 @@ class ModalDinamic extends HTMLElement {
                 <form class="row g-2 container" id="createRegister">
                     
                     <div class="col-md-12 ms-auto">
+                      <label for="event" class="form-label">Evento</label>
+                      <select class="form-select" id="event" name="event" >
+                      <option selected disabled value="">Seleccione un Evento</option>
+                      </select>
+                      <div id="divErrorEvent"></div>
+                    </div>
+
+
+                    <div class="col-md-12 ms-auto">
                       <label for="tablesSearch" class="form-label">Mesas</label>
                       <select class="form-select" id="tablesSearch" name="tablesSearch" required>
                       <option selected disabled value="">Seleccione una Mesa</option>
