@@ -68,12 +68,24 @@ const showData = async (current = currentPage) => {
   currentPage = current;
   const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const { data, page, total } = registers;
-  localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
+  // localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
   //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
   const votes = votesRealTime.map( ({ votes }) => votes );
   totalVotes = votes.reduce( ( a, b ) => a + b, 0);
   totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
+
+
+  await searchTablesEnabled();
+
   printList( data, page, total );
+}
+
+const searchTablesEnabled = async () => {
+  const tables = await consulta( api + `tables?ubication_id=${ubicationId}&enabled=1`); 
+  const { ok, msg, data } =  tables;
+  localStorage.setItem("tablesSearch",  JSON.stringify(data));
+
+  await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
 }
 
 const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
@@ -99,8 +111,10 @@ const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
   if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
   showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
   showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
+
   await showData();
-  await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
+  clearForm();
+
   bootstrap.Modal.getInstance(modalRegister).hide();
   document.querySelector(".modal-backdrop").remove();
 }
@@ -229,5 +243,5 @@ function loadingCandidates({ id, name }) {
 window.addEventListener("load", async () => {  
   await onLoadSite();
   // await showOptions('event', `${api}event?commune=${communeId}&enabled=true`);
-  await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
+    // await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
 });
