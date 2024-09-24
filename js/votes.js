@@ -68,7 +68,7 @@ const showData = async (current = currentPage) => {
   currentPage = current;
   const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const { data, page, total } = registers;
-  // localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
+  localStorage.setItem("vote-tables",  JSON.stringify(data) );
   //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
   const votes = data.map( ({ votes }) => votes );
   totalVotes = votes.reduce( ( a, b ) => a + b, 0);
