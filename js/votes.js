@@ -33,7 +33,7 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'Nombre', 'Mesa', 'total'];
+const titlesTable = [ 'MESA', 'Nombre', 'total'];
 const tableTitles = document.getElementById('list_titles');
 const trTitles = document.getElementById('list_titles_tr');
 const table = document.getElementById('list_row');
@@ -54,9 +54,9 @@ const printList = async ( data, page = currentPage, total = 1 ) => {
   }
 
   for (const i in data ) {
-    const { name, table_name, votes } = data[i];
+    const { table_name, name, votes } = data[i];
     const rowClass  = 'text-right';
-    const customRow = `<td>${ [ name, table_name, votes ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ table_name, name, votes ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -70,7 +70,7 @@ const showData = async (current = currentPage) => {
   const { data, page, total } = registers;
   // localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
   //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
-  const votes = votesRealTime.map( ({ votes }) => votes );
+  const votes = data.map( ({ votes }) => votes );
   totalVotes = votes.reduce( ( a, b ) => a + b, 0);
   totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
 
@@ -242,6 +242,4 @@ function loadingCandidates({ id, name }) {
 // Al abrir la pagina
 window.addEventListener("load", async () => {  
   await onLoadSite();
-  // await showOptions('event', `${api}event?commune=${communeId}&enabled=true`);
-    // await showOptions('tablesSearch', `${api}tables?ubication_id=${ubicationId}&enabled=1`);
 });

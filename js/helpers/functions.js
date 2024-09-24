@@ -17,7 +17,7 @@ const updateStore = (id, data, jsonStrinfy = false) => {
 
 const toggleMenu = ( id, enabled = false) => enabled ? document.getElementById( id ).classList.remove('d-none') : document.getElementById( id ).classList.add("d-none");
 
-const showBadgeBoolean = (enabled = 1) => `<span class="badge text-bg-${ enabled == 1 ? 'success' : 'danger' }">${ enabled ? 'ACTIVADO' : 'DESACTIVADO' }</span>`
+const showBadgeBoolean = (enabled = 1) => `<span class="check-${ enabled == 1 ? 'success' : 'danger' }">${ `<i class="fa-regular fa-circle-${ enabled ? 'check' : 'xmark'}">` }</span>`
 
 const showbtnCircle = (btns) => `<div class="btn-group" role="group">${ btns }</div>`
 

@@ -10,6 +10,50 @@ body{
   color: black;
 }
 
+table {
+  width: auto;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 1px; /* Ajusta este valor según tus necesidades */
+}
+
+th, td {
+  /* border: 1px solid black; */
+  padding: 8px;
+  text-align: center;
+}
+tr {
+
+  height: 1px; /* Ajusta la altura mínima */
+  /* text-align: center; */
+}
+
+/* Ajustar el ancho de las columnas */
+th:nth-child(1), td:nth-child(1) {
+  width: 20%;
+}
+th:nth-child(2), td:nth-child(2) {
+  width: 30%;
+}
+th:nth-child(3), td:nth-child(3) {
+  width: 40%;
+}
+th:nth-child(4), td:nth-child(4) {
+  width:5%;
+}
+th:nth-child(5), td:nth-child(5) {
+  width:10%;
+}
+th:nth-child(6), td:nth-child(6) {
+  width:10%;
+}
+
 .chartjs {
   width: 400px;
   height: 100px;
@@ -55,6 +99,24 @@ body{
   border-color: #f8f9fa;
   color: white;
   border-radius: 2rem;
+}
+
+.check-success, .check-danger {
+  width: 40px; /* Ajusta según sea necesario */
+  height: 40px; /* Ajusta según sea necesario */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.check-success {
+  background-color: green;
+}
+
+.check-danger {
+  background-color: red;
 }
 
 .info {
