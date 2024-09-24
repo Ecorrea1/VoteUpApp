@@ -39,10 +39,12 @@ const showOptions = async ( select, query = '' ) => {
   selectElement.value = "";
   const localVariable = localStorage.getItem( select ) 
   let options = localVariable ? JSON.parse(localVariable) : [];
-  // Como saber si una variable este indefined, vacio, en []
   if (!options.length || options === undefined) {
     const result = await consulta( query ? query : `${api}${query}` );
-    options = result.data;
+    const {ok, msg, data} = result;
+    
+    if (!ok) return document.getElementById('divErrorTables').textContent = `${msg}`;
+    options = data;
     localStorage.setItem( select, JSON.stringify( options ));
   }
   // Iteramos sobre el array de opciones

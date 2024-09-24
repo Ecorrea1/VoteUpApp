@@ -66,17 +66,19 @@ const printList = async ( data, page = currentPage, total = 1 ) => {
 // Show all registers in the table
 const showData = async (current = currentPage) => {
   currentPage = current;
-  const registers = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
-  const { data, page, total } = registers;
+  const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
+  const { ok, msg, data, page, total } = response;
+  
+  if(!ok) {
+    console.log(msg);
+    return showError('', divMessage,`${msg}`, false, true);
+  }
+
   // localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
-  //Como obtener solo el campo votes y sumarlos para dar un total de este array con objetos [{votes:13},{votes:12}] a [12,13]de valorRealTime
   const votes = data.map( ({ votes }) => votes );
   totalVotes = votes.reduce( ( a, b ) => a + b, 0);
   totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
-
-
   await searchTablesEnabled();
-
   printList( data, page, total );
 }
 
@@ -89,27 +91,9 @@ const searchTablesEnabled = async () => {
 }
 
 const sendInfo = async (id = '', data, action = 'CREATE'|'EDIT') => {
-
-  // eventValidator = validateAllfields(eventInput, divErrorEvent, true);
-  // tablesValidator = validateAllfields(tablesInput, divErrorTables, true);
-  // candidateValidator = validateAllfields(candidateInput, divErrorCandidate, true);
-  
-  // if (!eventValidator) return console.log(`Ingrese un evento ${eventValidator}`);
-  // if (!tablesValidator) return console.log('Ingrese una mesa');
-  // if (!candidateValidator) return console.log(`Ingrese un candidato ${candidateValidator}`);
-
-  // const findDuplicateData = votesRealTime.find(item => 
-  //   item.event_id === data.event_id &&
-  //   item.table_id === data.table_id &&
-  //   item.candidate_id === data.candidate_id
-  //   // item.votes === votesRealTime.votes
-  // );
-  
-  // if (findDuplicateData) return showError('', divMessage, 'ESTAS INGRESANDO LA MISMA MESA Y CANDIDATO', false, true);
-  
   const result = await createEditData( data, id );
   if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
-  showMessegeAlert(alertMessage, action == 'EDIT' ? `Registro Editado` : 'Registro Creado');
+  showMessegeAlert(alertMessage,`Registro ${ action == 'EDIT' ? 'Editado' : 'Creado' }`);
   showError('', divMessage, `VOTOS DE LA MESA REGISTRADOS`, false, true);
 
   await showData();
@@ -135,7 +119,6 @@ const createEditData = async ( data, uid = '') => {
 
 async function showModalCreateOrEdit( uid ) {
   
-
   // toggleMenu('edit_register', true);
   toggleMenu('save_register', false);
   
@@ -148,20 +131,21 @@ async function showModalCreateOrEdit( uid ) {
   // candidateInput.value = candidate_id;
   // votesInput.value = votes;
   // enabledInput.value = enabled;
-
   myModal.show();
 }
 function clearForm() {
   // idInput.value = '';
   // eventInput.value =  ``;
-  tablesInput.value = '';
   // candidateInput.value = '';
   // votesInput.value = 0;
+  tablesInput.value = '';
+  divMessage.innerHTML = "";
   divDinamicInputs.innerHTML = "";
 }
 
 btnNewRegister.addEventListener('click', () => {
   clearForm();
+  // selectedModal();
   toggleMenu('save_register', true);
 });
 
@@ -195,21 +179,19 @@ formRegister.addEventListener('submit', async function(e){
 tablesInput.addEventListener("change", async function(){
   selectedTable = this.value;
   divDinamicInputs.innerHTML = "Cargando ....";  
-  setTimeout(async() => { 
-
+  setTimeout( async () => { 
     let response = JSON.parse(localStorage.getItem('candidates')) || [];
-    if(response.length === 0 || response=== undefined){
+    if(response.length === 0 || response === undefined){
       const result = await consulta(`${api}candidates?commune=${communeId}`);
       // const result = await consulta(`${api}candidates?commune=${communeId}&event=${selectedEvent}`);
       localStorage.setItem("candidates",  JSON.stringify(result.data) );
     }
-
     response = JSON.parse(localStorage.getItem('candidates'));
     const data = response.filter(e => e.event_id === selectedEvent)
-    divDinamicInputs.innerHTML = data.length !== 0 ? "" : "NO HAY DATOS"; 
-    data.length !== 0 ? data.forEach(loadingCandidates) : console.log('no hay datos');
+    data.length !== 0 ? data.forEach(loadingCandidates) : divDinamicInputs.innerHTML = "NO HAY DATOS";
   }, timer) 
 });
+
 function loadingCandidates({ id, name }) {
     //crear el div que contiene los 2 sub-divs
     const div_principal = D.create('div');
@@ -237,6 +219,43 @@ function loadingCandidates({ id, name }) {
     D.append([div_nombre, div_apellido], div_principal);
     //agregar el div del primer comentario al contenedor con id #container
     D.append(div_principal, D.id('formBodyDinamic') );
+}
+
+
+function selectedModal() {
+  //crear el div que contiene los 2 sub-divs
+  const div_principal = D.create('div');
+  // Crear el primer div
+  const div_event = D.create('div', {class: 'col-md-12 ms-auto'});
+  // Crear y agregar el label para el evento
+  const labelEvent = D.create('label',{class:'form-label', textContent: 'Evento', for:'event'});
+  // Crear y agregar el select para el evento
+  const selectEvent = D.create('select',{class:'form-select', id:'event', name:'event'});
+  // Crear y agregar la opción por defecto para el evento
+  const optionEvent = D.create('option',{ selected: 'selected', disabled: 'disabled', value:'', textContent:'Seleccione un evento'});
+  // Crear y agregar el div para el error del evento
+  const divErrorEvent = D.create('div', {id:'divErrorEvent'});
+
+
+  // Crear el segundo div
+  const div_mesas = D.create('div', {class: 'col-md-12 ms-auto'});
+  // Crear y agregar el label para las mesas
+  const labelTables = D.create('label',{class:'form-label', textContent:'Mesas', for:'event'});
+  // Crear y agregar el select para las mesas
+  const selectTables = D.create('select',{class:'form-select', id:'tablesSearch', name:'tablesSearch', required:'required'});
+  // Crear y agregar la opción por defecto para las mesas
+  const optionTables = D.create('option', {value:'', textContent:'Seleccione una mesa', selected:'selected', disabled: 'disabled'});
+  // Crear y agregar el div para el error de las mesas
+  const divErrorTables = D.create('div',{id:'divErrorTables'});
+
+
+  //agregar cada etiqueta a su nodo padre
+  D.append([labelEvent, selectEvent, optionEvent ,divErrorEvent], div_event);
+  D.append([labelTables, selectTables, optionTables, divErrorTables ], div_mesas);
+  
+  D.append([div_event, div_mesas], div_principal);
+  //agregar el div del primer comentario al contenedor con id #container
+  D.append(div_principal, D.id('optionsModal') );
 }
 
 // Al abrir la pagina
