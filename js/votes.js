@@ -225,7 +225,7 @@ function loadingCandidates({ id, name }) {
 
     //crear los inputs de nombre y apellido
     const input_nombre = D.create('input', { type: 'text', name: `${id} - CANDIDATO: ${name}`, autocomplete: 'off', value: `${name}`, disabled: 'disabled', required: 'required'} );
-    const input_apellido = D.create('input', { type: 'number', name: `${id}`, autocomplete: 'off', placeholder: 'Ingrese votos' , required: 'required'});
+    const input_apellido = D.create('input', { type: 'number', class: 'votesInputs', name: `${id}`, autocomplete: 'off', placeholder: 'Ingrese votos' , required: 'required'});
 
     //crear un botoncito de eliminar este div 
     // const borrar = D.create('a', { href: 'javascript:void(0)', innerHTML: 'x', onclick: function( ){ D.remove(div_principal); } } );
