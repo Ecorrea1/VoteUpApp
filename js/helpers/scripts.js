@@ -25,7 +25,7 @@ Apex.grid = {
   
     return array;
   }
-  
+
   // data for the sparklines that appear below header area
   const sparklineData = [47, 45, 54, 38, 56, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 19, 46];
   
@@ -62,7 +62,7 @@ Apex.grid = {
     },
     colors: ['#DCE6EC'],
     title: {
-      text: '50',
+      text: `${mesasTotales.length - mesasIngresadas.length}`,
       offsetX: 30,
       style: {
         fontSize: '24px',
@@ -108,7 +108,7 @@ Apex.grid = {
     },
     colors: ['#DCE6EC'],
     title: {
-      text: '45',
+      text: `${mesasIngresadas.length}`,
       offsetX: 30,
       style: {
         fontSize: '24px',
@@ -155,7 +155,7 @@ Apex.grid = {
     colors: ['#008FFB'],
     //colors: ['#5564BE'],
     title: {
-      text: '2500',
+      text: `${totalVotes}`,
       offsetX: 30,
       style: {
         fontSize: '24px',

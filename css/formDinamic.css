@@ -4,10 +4,10 @@ form{
     padding: 30px 60px;
     box-shadow: 0 0 10px rgba(0,0,0,.2);
 }
-/* 
+ 
 #formBodyDinamic{
     height: 100%;
-} */
+} 
 
 #formBodyDinamic > div{
     display: flex;
@@ -18,3 +18,30 @@ form{
     margin-right: 6px;
     display: inline-block;
 }
+
+@media screen and (max-width: 480px) {
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    #formBodyDinamic input{
+      display: flex;
+      margin-top: 3px;
+      width: 100%;
+      justify-content: center;
+    }
+     #formBodyDinamic select{
+      display: flex;
+      margin-top: 1rem;
+      width: 100%;
+      justify-content: center;
+    }
+  
+     #formBodyDinamic button{
+      display: flex;
+      margin-top: 5rem;
+      width: 100%;
+      justify-content: center;
+    }
+  }

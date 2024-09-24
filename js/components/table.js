@@ -16,7 +16,6 @@ class Table extends HTMLElement {
     this.innerHTML = `
     <div class="container">
       <table id="table_registros" class="${this.classname}">
-        <caption>${this.name}</caption>
         <thead id="list_titles" class="table-dark"></thead>
         <tbody id="list_row"></tbody>
       </table>
@@ -24,6 +23,18 @@ class Table extends HTMLElement {
     </div>  
     `;
   }
+  // connectedCallback() {
+  //   this.innerHTML = `
+  //   <div class="container">
+  //     <table id="table_registros" class="${this.classname}">
+  //       <caption>${this.name}</caption>
+  //       <thead id="list_titles" class="table-dark"></thead>
+  //       <tbody id="list_row"></tbody>
+  //     </table>
+  //     <div id="pagination-container" class="pagination-container"></div>
+  //   </div>  
+  //   `;
+  // }
 }
 
 customElements.define('table-component', Table);
