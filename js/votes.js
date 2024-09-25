@@ -12,7 +12,7 @@ let selectedCandidate = 0;
 let selectedTable = 0;
 let selectedEvent = 1;
 let currentPage = 1;
-let limitInfo = 10;
+let limitInfo = 8;
 
 const divErrorEvent = document.getElementById('divErrorEvent');
 const divErrorCandidate = document.getElementById('divErrorCandidate');
@@ -66,6 +66,7 @@ const printList = async ( data, page = currentPage, total = 1 ) => {
 // Show all registers in the table
 const showData = async (current = currentPage) => {
   currentPage = current;
+  // const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=v.table_id&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
   const { ok, msg, data, page, total } = response;
   

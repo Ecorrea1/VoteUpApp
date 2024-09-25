@@ -1,26 +1,16 @@
 // import ApexCharts from 'apexcharts';
 
 const showData = async () => {
-    const response = await consulta( api + `dashboard`);
-    const { ok, msg, data } =  response;
+    const result = await consulta( api + `dashboard`);
+    const { ok, msg, data } =  result;
     if (!ok) return console.log('Error:', msg);
-    localStorage.setItem("dashboard",  JSON.stringify( data ) );   
+    localStorage.setItem("dashboard",  JSON.stringify( data[0] ) );   
 
     const DASHBOARD = JSON.parse(localStorage.getItem('dashboard'));
-    const DATA_CANDIDATES = JSON.parse(localStorage.getItem('candidates')) || [];
-    // Crear un array con solo el campo name de DATA_CANDIDATES
-    const arrayDeNombres = DATA_CANDIDATES.map(objeto => objeto.name);
-    const transformedArray = arrayDeNombres.map(name => {
-      if (name === 'BLANCOS' || name === 'NULOS') return name;
-      const parts = name.split(' ');
-      return parts[0] + ' ' + parts[1].charAt(0) + '.'
-    });
-    
-    
-    const votacionesTotales = [1200, 2300, 300, 140, 200,234,54];
-    const candidatos = transformedArray;
+    const DATA_CANDIDATES = Object.entries(data[1]).map(([key, value]) => `${key} - ${value}`);
+    const votacionesTotales = Object.values(data[1]);
     const {total_mesas, total_mesas_listas, total_votos} = DASHBOARD
-    renderApex({total_mesas, total_mesas_listas, total_votos, candidatos, votacionesTotales});
+    renderApex({total_mesas, total_mesas_listas, total_votos, candidatos: DATA_CANDIDATES, votacionesTotales});
 }
 
 const randomizeArray = (arg) => {
