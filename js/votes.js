@@ -180,6 +180,7 @@ tablesInput.addEventListener("change", async function(){
   selectedTable = this.value;
   divDinamicInputs.innerHTML = "Cargando ....";  
   setTimeout( async () => { 
+    divDinamicInputs.innerHTML = "";  
     let response = JSON.parse(localStorage.getItem('candidates')) || [];
     if(response.length === 0 || response === undefined){
       const result = await consulta(`${api}candidates?commune=${communeId}`);
