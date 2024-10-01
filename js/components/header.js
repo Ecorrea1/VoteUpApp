@@ -2,8 +2,8 @@ class Header extends HTMLElement {
   constructor() {
       super();
       this.attributesComponents = [
-          this.name = 'Ingresa tu titulo',
-          this.classname = 'navbar bg-dark border-bottom border-body navbar-expand-lg bg-body-tertiary" data-bs-theme="dark'
+        this.name = 'VoteUP',
+        this.classname = 'navbar bg-dark border-bottom border-body navbar-expand-lg bg-body-tertiary" data-bs-theme="dark'
       ];
   }
 
@@ -29,6 +29,7 @@ class Header extends HTMLElement {
                           <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Logistica</a>
                           <ul class="dropdown-menu">
                               <li><a id="url" name="event" class="dropdown-item" href="/event.html">Eventos</a></li>
+                              <li><a id="url" name="candidates" class="dropdown-item" href="/candidates.html">Candidatos</a></li>
                               <li><a id="url" name="ubication" class="dropdown-item" href="/ubication.html">Ubicaciones</a></li>
                               <li><a id="url" name="tables" class="dropdown-item" href="/tables.html">Mesas</a></li>
                           </ul>
@@ -36,15 +37,14 @@ class Header extends HTMLElement {
                       <li class="nav-item dropdown" id="register">
                           <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Registros</a>
                           <ul class="dropdown-menu">
-                              <li><a id="url" name="users" class="dropdown-item" href="/users.html">Usuarios</a></li>
-                              <li><a id="url" name="candidates" class="dropdown-item" href="/candidates.html">Candidatos</a></li>
                               <li><a id="url" name="votes" class="dropdown-item" href="/votes.html">Registro de votos</a></li>
-                              <li><a id="url" name="dashboard" class="dropdown-item" href="/control.html">Administracion</a></li>
+                              <li><a id="url" name="dashboard" class="dropdown-item" href="/dashboard.html">Dashboard</a></li>
                           </ul>
                       </li>
                       <li class="nav-item dropdown" id="config">
                           <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Configuracion</a>
                           <ul class="dropdown-menu">
+                              <li><a id="url" name="users" class="dropdown-item" href="/users.html">Usuarios</a></li>
                               <li><a id="url" name="role" class="dropdown-item" href="/role.html">Roles</a></li>
                           </ul>
                       </li>

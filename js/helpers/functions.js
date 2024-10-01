@@ -153,57 +153,6 @@ const actionWithData = async ( data, uid = '', endpoint = '') => {
     return false;
   });
 }
-function exportTableToExcel(tableID, filename = ''){
-  let downloadLink;
-  const dataType = 'application/vnd.ms-excel';
-  const tableSelect = document.getElementById(tableID);
-  const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-  
-  // Specify file name
-  filename = filename ? filename + '.xls' : 'excel_data.xls';
-  // Create download link element
-  downloadLink = document.createElement("a");
-  document.body.appendChild(document.createElement("a"));
-  
-  if(navigator.msSaveOrOpenBlob){
-    const blob = new Blob(['ufeff', tableHTML], { type: dataType });
-    navigator.msSaveOrOpenBlob( blob, filename);
-  } else {
-    // Create a link to the file
-    downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    // Setting the file name
-    downloadLink.download = filename;
-    //triggering the function
-    downloadLink.click();
-  }
-}
-function exportTableToPDF(tableID,  filename = 'registrosEnPdf' ) {
-  const doc = new jsPDF('p', 'mm', 'a4'); // A4 page in portrait mode
-  doc.autoTable({
-     html: document.getElementById(tableID),
-     startY: 20,
-     theme: 'grid', // Optional, uses grid theme if not defined
-     styles: {
-       fontSize: 9,
-       overflow: 'linebreak',
-       columnWidth: 'wrap'
-     },
-     headerStyles: {
-       fillColor: [231, 76, 60],
-       fontSize: 12
-     },
-     bodyStyles: {
-       fillColor: [255, 255, 255],
-       strokeColor: [0, 0, 0],
-       fontSize: 10
-     },
-     alternateRowStyles: {
-       fillColor: [245, 245, 245]
-     }
-  });
- 
-  doc.save(`${filename}.pdf`); // Save the PDF with a filename
-}
 async function urlRols() {
   let url = document.getElementById("pages");
 
