@@ -1,149 +1,252 @@
-"use strict";
+const RELOAD_DASHBOARD = JSON.parse(localStorage.getItem('reload')) | false;
 
-let currentPage = 1;
-let limitInfo = 10;
-let votesRealTime = JSON.parse(localStorage.getItem('vote-tables')) || [];
+const showData = async () => {
+ 
+  const result = await consulta( api + `dashboard`);
+  const { ok, msg, data } =  result;
+  
+  if (!ok) return console.log('Error:', msg);
 
-const backgroundColor = [
-  'rgba(255, 99, 132, 0.6)',
-  'rgba(54, 162, 235, 0.6)',
-  'rgba(255, 206, 86, 0.6)',
-  'rgba(75, 192, 192, 0.6)',
-  'rgba(153, 102, 255, 0.6)',
-  'rgba(255, 159, 64, 0.6)'
-];
+  localStorage.setItem("dashboard",  JSON.stringify( data[0] ) );   
+  const DASHBOARD = JSON.parse(localStorage.getItem('dashboard'));
+  const DATA_CANDIDATES = Object.entries(data[1]).map(([key, value]) => `${key} - ${value}`);
+  const votacionesTotales = Object.values(data[1]);
+  const {total_mesas, total_mesas_listas, total_votos} = DASHBOARD
+  renderApex({total_mesas, total_mesas_listas, total_votos, candidatos: DATA_CANDIDATES, votacionesTotales});
+}
 
-const borderColor = [
-  'rgba(255, 99, 132, 1)',
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 206, 86, 1)',
-  'rgba(75, 192, 192, 1)',
-  'rgba(153, 102, 255, 1)',
-  'rgba(255, 159, 64, 1)'
-];
-
-let typeSChart = 'bar' | 'line' | 'bubble' | 'doughnut' | 'pie' | 'polarArea' | 'radar' | 'scatter';
-
-// const chartJS =  document.querySelector('chart-bar-component[idChart="myChart"]');
-// chartJS.labels = labels;
-
-// Show Alert
-const alertMessage = document.getElementById('alerts');
-
-// Show table 
-const titlesTable = [ 'EVENTO', 'CANDIDATO', 'CENTRO','MESA', 'TOTAL'];
-const tableTitles = document.getElementById('list_titles');
-const trTitles = document.getElementById('list_titles_tr');
-const table = document.getElementById('list_row');
-
-const ctx = document.getElementById('myChart').getContext('2d');
-const ctx2 = document.getElementById('myChart2').getContext('2d');
-const ctx3 = document.getElementById('myChart3').getContext('2d');
-
-const showChart = async (chart,data, labels, backgroundColor, borderColor, title = 'Cantidad de Votos', typeChart = 'bar') => {
-
-  new Chart(chart, {
-    type: typeChart,// line
-    data: {
-        labels,
-        datasets: [{
-            label: title ,
-            data: data,
-            backgroundColor,
-            borderColor,
-            hoverOffset: 4,
-            borderWidth: 3
-        }]
-    },
-    options: {
-        animation: true,
-        responsive: true,
-        layout: {
-          padding: 50
-        },
-        plugins: {
-            legend: { position: 'top' },
-            tooltip: { callbacks: { label: (tooltipItem) => `Votos: ${tooltipItem.raw}` } },
-            subtitle: { display: false, text: 'Custom Chart Subtitle'},
-            title: { display: true, text: title,  padding: { top: 10, bottom: 30} }
-        },
-        scale : { y: { beginAtZero: typeChart != 'pie' ? false : true } }
+const randomizeArray = (arg) => {
+    const array = arg.slice();
+    let currentIndex = array.length, temporaryValue, randomIndex;
+  
+    while (0 !== currentIndex) {
+  
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
     }
-});
+  
+    return array;
+  }
+  
 
-}
-const printList = async ( data, page = currentPage, total = 1) => {
+function renderApex(data = {}){
+
+    Apex.grid = { padding: { right: 0, left: 0 }}
+    Apex.dataLabels = { enabled: false }
+    // data for the sparklines that appear below header area
+    const sparklineData = [47, 45, 54, 38, 56, 24, 65, 31, 37, 39, 62, 51, 35, 41, 35, 27, 93, 53, 61, 27, 54, 43, 19, 46];
+    // the default colorPalette for this dashboard
+    // var colorPalette = ['#01BFD6', '#5564BE', '#F7A600', '#EDCD24', '#F74F58'];
+    const colorPalette = ['#00D8B6', '#008FFB', '#FEB019', '#FF4560', '#775DD0', '#FF5733', '#C70039', '#900C3F', '#581845', '#DAF7A6'];
     
-  table.innerHTML = "";
-  if( data.length === 0 || !data ) {
-    showMessegeAlert( alertMessage, 'No se encontraron registros', true );
-    return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
+    const spark1 = {
+        chart: {
+          id: 'sparkline1',
+          group: 'sparklines',
+          type: 'area',
+          height: 160,
+          sparkline: {
+            enabled: true
+          },
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        fill: {
+          opacity: 1,
+        },
+        series: [{
+          name: 'Mesas por ingresar',
+          data: randomizeArray(sparklineData)
+        }],
+        labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
+        yaxis: {
+          min: 0
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        colors: ['#DCE6EC'],
+        title: {
+          text: `${data.total_mesas - data.total_mesas_listas}`,
+          offsetX: 30,
+          style: {
+            fontSize: '24px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        },
+        subtitle: {
+          text: 'Mesas aun por ingresar',
+          offsetX: 30,
+          style: {
+            fontSize: '14px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        }
+      }
+      const spark2 = {
+        chart: {
+          id: 'sparkline2',
+          group: 'sparklines',
+          type: 'area',
+          height: 160,
+          sparkline: {
+            enabled: true
+          },
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        fill: {
+          opacity: 1,
+        },
+        series: [{
+          name: 'Mesas terminadas',
+          data: randomizeArray(sparklineData)
+        }],
+        labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
+        yaxis: {
+          min: 0
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        colors: ['#DCE6EC'],
+        title: {
+          text: `${data.total_mesas_listas}`,
+          offsetX: 30,
+          style: {
+            fontSize: '24px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        },
+        subtitle: {
+          text: 'Mesas ingresadas',
+          offsetX: 30,
+          style: {
+            fontSize: '14px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        }
+      }
+      const spark3 = {
+        chart: {
+          id: 'sparkline3',
+          group: 'sparklines',
+          type: 'area',
+          height: 160,
+          sparkline: {
+            enabled: true
+          },
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        fill: {
+          opacity: 1,
+        },
+        series: [{
+          name: 'Votaciones por ingresos',
+          data: randomizeArray(sparklineData)
+        }],
+        labels: [...Array(24).keys()].map(n => `2018-09-0${n+1}`),
+        xaxis: {
+          type: 'datetime',
+        },
+        yaxis: {
+          min: 0
+        },
+        colors: ['#008FFB'],
+        //colors: ['#5564BE'],
+        title: {
+          text: `${data.total_votos}`,
+          offsetX: 30,
+          style: {
+            fontSize: '24px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        },
+        subtitle: {
+          text: 'Votaciones por ingreso',
+          offsetX: 30,
+          style: {
+            fontSize: '14px',
+            cssClass: 'apexcharts-yaxis-title'
+          }
+        }
+      }  
+      const optionDonut = {
+        chart: {
+            type: 'donut',
+            width: '100%',
+            height: 400
+        },
+        dataLabels: {
+          enabled: true,
+        },
+        plotOptions: {
+          pie: {
+            customScale: 0.9,
+            donut: {
+              size: '70%',
+            },
+            offsetY: 0,
+          },
+          stroke: {
+            colors: undefined
+          }
+        },
+        colors: colorPalette,
+        title: {
+          text: 'Votaciones Totales',
+          style: {
+            fontSize: '18px'
+          }
+        },
+        series: data.votacionesTotales,
+        labels: data.candidatos,
+        legend: {
+          position: 'left',
+          offsetY: 40
+        }
+      }
+
+    new ApexCharts(document.querySelector("#spark1"), spark1).render();
+    new ApexCharts(document.querySelector("#spark2"), spark2).render();
+    new ApexCharts(document.querySelector("#spark3"), spark3).render();
+    new ApexCharts(document.querySelector("#donut"), optionDonut ).render();
+
+}
+
+
+const reloadDashboard = async () => {
+
+  const response = await consulta(api + 'auth/RLDB');
+  const {ok} = response;
+  
+  if (!ok) {
+    localStorage.setItem("reload", JSON.stringify(false));
+    return;
   }
 
-  for (const i in data ) {
-    const { id, event_name, name, ubication_name, table_name, votes } = data[i];
-    // const actions = [
-    //   `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
-    // ]
-    const rowClass  = 'text-right';
-    const customRow = `<td>${ [ event_name ,name, ubication_name, table_name, votes ].join('</td><td>') }</td>`;
-    const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
-    table.innerHTML += row;
-  }
+  localStorage.setItem("reload", JSON.stringify(true));
+  window.location.reload(true);
   
-  createPagination(total, page);
 }
 
-// Show all registers in the table
-const showData = async (current = currentPage) => {
-    currentPage = current;
-  const registers = await consulta( api + `vote-tables?page=${current}&limit=${limitInfo}`);
-  const { data, page, total } = registers;
-  localStorage.setItem("vote-tables", JSON.stringify(data));
+// setInterval(async function(){ 
+//   // if (!RELOAD_DASHBOARD)  return console.log('No esta habilitado esta feature flags');
+//   await reloadDashboard();
+// }, 10000);
 
-  const tables = votesRealTime.map( ({ table_name }) => table_name );//Array de mesas
-  const candidatesName = votesRealTime.map( ({ name }) => name );// Array de cnadidatos
-  const centersName = votesRealTime.map( ({ ubication_name }) => ubication_name );// Array de cnadidatos
-  
-  const uniqueCandidates = candidatesName.filter((value, index, self) => self.indexOf(value) === index);
-  
-  const votes = votesRealTime.map( ({ votes }) => votes );// Array de votos
-  const totalVotes = votes.reduce( ( a, b ) => a + b, 0);
+setInterval(async function(){ await reloadDashboard();}, 300000);
 
-
-  console.log(totalVotes);
-  console.log(tables);
-  console.log(centersName);
-  console.log(uniqueCandidates);
-  
-  console.log(votesRealTime);
-  
-  showChart(ctx,[300, 500, 200, 100, 30,700], uniqueCandidates , backgroundColor, borderColor, 'Cantidad de Votos', 'bar' )
-  showChart(ctx2,[300, 500, 200, 100, 30,700], uniqueCandidates, backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'line' )
-  showChart(ctx3,[300, 500, 200, 100, 30,700], uniqueCandidates, backgroundColor, borderColor, 'CANTIDAD TOTAL DE VOTOS', 'doughnut' )
-
-  printList( data, page, total );
-}
-
-
-const createEditData = async ( data, uid = '') => {  
-  const query = uid == '' ? 'vote-tables' : `vote-tables/${ uid }`
-  return await fetch( api + query , {
-    method: uid ? 'PUT' : 'POST',
-    headers: { 'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  })
-  .then(response => response.ok)
-  .catch(err => {
-    console.error(err)
-    return false;
-  });
-}
-
-// Al abrir la pagina
 window.addEventListener("load", async () => {
-  await onLoadSite();
-//   await showOptions('event', `${api}event?commune=${communeId}`);
-//   await showOptions('tables', `${api}tables?ubication=${ubicationId}`);
-//   await showOptions('candidate', `${api}candidates?commune=${communeId}`);
+    isSession();
+    await showData();
 });
+
