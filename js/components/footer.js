@@ -27,7 +27,7 @@ class Footer extends HTMLElement {
           color: #fff;
           width: 100%;
           bottom: 0;
-          position:fixed;
+          position:absolute;
         }
       </style>
     `;
