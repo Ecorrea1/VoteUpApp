@@ -64,12 +64,12 @@ const showData = async () => {
   printList( data );
 }
 
-const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
-  nameValidator = validateAllfields(nameInput, divErrorName);
-  if (!nameValidator) return console.log('Ingrese Nombre');
+const sendInfo = async (uid = '', action = 'CREATE'|'EDIT') => {
+  // nameValidator = validateAllfields(nameInput, divErrorName);
+  // if (!nameValidator) return console.log('Ingrese Nombre');
   
   const data = {
-    name: nameInput.value.toUpperCase(),
+    name: nameInput.value,
     description: descriptionInput.value,
     ubication_id: Number(ubicationInput.value),
     total: Number(totalInput.value),
@@ -77,7 +77,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     user: userId
   }
 
-  const result = await createEditData( data, idCristal );
+  const result = await createEditData( data, uid );
   if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
   await showData();
   bootstrap.Modal.getInstance(modalRegister).hide();
