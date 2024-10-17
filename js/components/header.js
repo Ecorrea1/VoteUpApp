@@ -38,7 +38,8 @@ class Header extends HTMLElement {
                            <a id="url" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Registros</a>
                            <ul class="dropdown-menu">
                                <li><a id="url" name="votes" class="dropdown-item" href="/votes.html">Registro de votos</a></li>
-                               <li><a id="url" name="dashboard" class="dropdown-item" href="/dashboard.html">Dashboard</a></li>
+                               <li><a id="url" name="dashboard" class="dropdown-item" href="/dashboard.html">Panel de control</a></li>
+                               <li><a id="url" name="uploader" class="dropdown-item" href="/uploader.html">Subida de datos</a></li>
                            </ul>
                        </li>
                        <li class="nav-item dropdown" id="config">

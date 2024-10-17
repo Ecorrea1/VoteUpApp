@@ -42,7 +42,7 @@ class ModalTables extends HTMLElement {
                   
                   <div class="col-md-12 ms-auto">
                   <label for="ubication" class="form-label">Ubicacion</label>
-                  <select class="form-select" id="ubication" name="ubication" >
+                  <select class="form-select" id="ubication" name="ubication" required>
                   <option selected disabled value="">Seleccione una Ubicacion</option>
                   </select>
                   <div id="divErrorUbication"></div>

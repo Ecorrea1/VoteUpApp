@@ -43,12 +43,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, total, ubication_id, enabled } = data[i];
+    const { id, name, total, ubication_name, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = '';
-    const customRow = `<td>${ [ name, ubication_id, total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, ubication_name, total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -58,18 +58,20 @@ const printList = async ( data, limit = 10 ) => {
 const showData = async () => {
   const registers = await consulta( api + `tables`); 
   const { ok, msg, data } =  registers;
+  if (!ok) return console.error(msg);
+  
   const filteredData = data.filter( item => item.enabled === true && item.ubication_id == ubicationId)  
   localStorage.setItem("tables",  JSON.stringify( data) );
   localStorage.setItem("tablesSearch",  JSON.stringify(filteredData));
   printList( data );
 }
 
-const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
-  nameValidator = validateAllfields(nameInput, divErrorName);
-  if (!nameValidator) return console.log('Ingrese Nombre');
+const sendInfo = async (uid = '', action = 'CREATE'|'EDIT') => {
+  // nameValidator = validateAllfields(nameInput, divErrorName);
+  // if (!nameValidator) return console.log('Ingrese Nombre');
   
   const data = {
-    name: nameInput.value.toUpperCase(),
+    name: nameInput.value,
     description: descriptionInput.value,
     ubication_id: Number(ubicationInput.value),
     total: Number(totalInput.value),
@@ -77,7 +79,7 @@ const sendInfo = async (idCristal = '', action = 'CREATE'|'EDIT') => {
     user: userId
   }
 
-  const result = await createEditData( data, idCristal );
+  const result = await createEditData( data, uid );
   if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
   await showData();
   bootstrap.Modal.getInstance(modalRegister).hide();
