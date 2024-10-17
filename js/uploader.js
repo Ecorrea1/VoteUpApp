@@ -1,7 +1,7 @@
+const alertMessage = document.getElementById('alerts');
 const inputFile = document.getElementById("input-excel");
 const fileData = document.getElementById("excel-data");
 const inputSendData = document.getElementById("send-data");
-
 const selectAction = document.querySelector("#btn-selected-action"); // Selecciona el elemento con id="item"
 
 let action = 'MESAS' | 'UBICACIONES' |  'EVENTOS' | 'USUARIOS';
@@ -149,7 +149,7 @@ selectAction.addEventListener('change', () =>{
 }); // Agrega un evento que se dispara cuando cambia el valor
 
 
-const selectedAllInputs = () => ( inputFile.value === '' && year === '' &&  user === '' && action === '' ) ? false : true;
+const selectedAllInputs = (comdition = inputFile.value === '' && year === '' &&  user === '' && action === '' ) => comdition ? false : true;
 
 function allInputToDefault() {
   // Todos los selected por defecto en opcion 0
@@ -160,6 +160,20 @@ function allInputToDefault() {
   action = '';
 }
 
+const createEditData = async ( data, uid = '') => {  
+  const query = uid == '' ? 'tables' : `tables/${ uid }`
+  return await fetch( api + query , {
+    method: uid ? 'PUT' : 'POST',
+    headers: { 'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  })
+  .then(response => response.ok)
+  .catch(err => {
+    console.error(err)
+    return false;
+  });
+}
+
 
 inputSendData.addEventListener("click", async (e) => {
   e.preventDefault();
@@ -168,9 +182,20 @@ inputSendData.addEventListener("click", async (e) => {
   
   const table = document.getElementById("myTable");
   const data = tableToJson(table);
+  const refused = data.map(item => {
+      return {
+        ...item,
+        ubication_id: Number(item.ubication_id),
+        total: Number(item.total)
+      };
+    }
+  );
+
+  console.log(refused);
+
+  const result = await createEditData( refused, '', 'tables' );
+  
+  if (!result) return showMessegeAlert(alertMessage, 'Error al editar el registro', true);
   table.innerHTML = "";
-  console.log(data);
-  // const result = await actionWithData( data, uid, 'tables' );
-  // result.unshift({id:'ID', result: 'Resultado', message: 'Descripcion'}); // Sirve para agregar titulos al comienzo
-  // return printListV2(result);
+  showMessegeAlert(alertMessage,`Registro ${ action == 'EDIT' ? 'Editado' : 'Creado' }`);
 });
