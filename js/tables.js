@@ -43,12 +43,12 @@ const printList = async ( data, limit = 10 ) => {
   }
 
   for (const i in data ) {
-    const { id, name, total, ubication_id, enabled } = data[i];
+    const { id, name, total, ubication_name, enabled } = data[i];
     const actions = [
       `<button type="button" id='btnEditRegister' onClick='showModalCreateOrEdit(${ id }, "EDIT")' value=${ id } class="btn btn-success rounded-circle"><i class="fa-solid fa-pen"></i></button>`
     ]
     const rowClass  = '';
-    const customRow = `<td>${ [ name, ubication_id, total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
+    const customRow = `<td>${ [ name, ubication_name, total,  showBadgeBoolean(enabled), showbtnCircle(actions)  ].join('</td><td>') }</td>`;
     const row       = `<tr class="${ rowClass }">${ customRow }</tr>`;
     table.innerHTML += row;
   }
@@ -58,6 +58,8 @@ const printList = async ( data, limit = 10 ) => {
 const showData = async () => {
   const registers = await consulta( api + `tables`); 
   const { ok, msg, data } =  registers;
+  if (!ok) return console.error(msg);
+  
   const filteredData = data.filter( item => item.enabled === true && item.ubication_id == ubicationId)  
   localStorage.setItem("tables",  JSON.stringify( data) );
   localStorage.setItem("tablesSearch",  JSON.stringify(filteredData));
