@@ -191,6 +191,8 @@ function closeSession() {
 }
 
 async function onLoadSite() {
+  console.log(window.location.pathname.split('/')[1].split('.')[0]);
+  
   isSession();
   showTitlesTable();
   await showData();

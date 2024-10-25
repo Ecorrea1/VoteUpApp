@@ -43,8 +43,6 @@ const printList = async ( data, limit = 10 ) => {
     showMessegeAlert( alertMessage, 'No se encontraron registros', true );
     return table.innerHTML = `<tr><td colspan="${ titlesTable.length + 1 }" class="text-center">No hay registros</td></tr>`;
   }
-
-  console.log(data);
   
   for (const i in data ) {
     console.log(data[i]);
