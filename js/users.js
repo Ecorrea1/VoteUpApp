@@ -97,7 +97,7 @@ async function showModalCreateOrEdit( id_info ) {
   const response = await consulta( api + 'user/' + id_info );  
   const { ok, msg, data } = response; 
   if (!ok) return showMessegeAlert(alertMessage, `Error al obtener el registro : ${msg}`, true);  
-  const { id, name, email, role, address, country_id, commune_id, code, phone, enabled } = data;
+  const { id, name, email, role, address, country_id, commune_id, ubication_id, code, phone, enabled } = data;
 
   idInput.value = id;
   nameInput.value =  name;
@@ -108,7 +108,7 @@ async function showModalCreateOrEdit( id_info ) {
   roleInput.value = role;
   nationalityInput.value = country_id;
   communeInput.value = commune_id;
-  ubicationInput.value = commune_id;
+  ubicationInput.value = ubication_id;
   enabledInput.value = enabled;
 
   myModal.show();
