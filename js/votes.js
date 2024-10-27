@@ -66,21 +66,20 @@ const printList = async ( data, page = currentPage, total = 1 ) => {
 // Show all registers in the table
 const showData = async (current = currentPage) => {
   currentPage = current;
-  // const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=v.table_id&asc=ASC&page=${current}&limit=${limitInfo}`, table);
-  const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
-  const { ok, msg, data, page, total } = response;
+  // const response = await consulta( api + `vote-tables?ubication=${ubicationId}&order=c.number_candidate&asc=ASC&page=${current}&limit=${limitInfo}`, table);
+  // const { ok, msg, data, page, total } = response;
   
-  if(!ok) {
-    console.log(msg);
-    return showError('', divMessage,`${msg}`, false, true);
-  }
+  // if(!ok) {
+  //   console.log(msg);
+  //   return showError('', divMessage,`${msg}`, false, true);
+  // }
 
   // localStorage.setItem("vote-tables",  JSON.stringify(registers.data) );
-  const votes = data.map( ({ votes }) => votes );
-  totalVotes = votes.reduce( ( a, b ) => a + b, 0);
-  totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
+  // const votes = data.map( ({ votes }) => votes );
+  // totalVotes = votes.reduce( ( a, b ) => a + b, 0);
+  // totalVotesInput.innerHTML = `TOTAL DE VOTOS : ${totalVotes}`;
   await searchTablesEnabled();
-  printList( data, page, total );
+  // printList( data, page, total );
 }
 
 const searchTablesEnabled = async () => {
