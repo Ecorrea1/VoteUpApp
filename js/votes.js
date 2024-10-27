@@ -33,10 +33,10 @@ const btnCreateRegister = document.getElementById(`save_register`);
 const btnEditRegister = document.getElementById(`edit_register`);
 
 // Show table 
-const titlesTable = [ 'MESA', 'Nombre', 'total'];
-const tableTitles = document.getElementById('list_titles');
-const trTitles = document.getElementById('list_titles_tr');
-const table = document.getElementById('list_row');
+// const titlesTable = [ 'MESA', 'Nombre', 'total'];
+// const tableTitles = document.getElementById('list_titles');
+// const trTitles = document.getElementById('list_titles_tr');
+// const table = document.getElementById('list_row');
 
 const formRegister = document.getElementById('createRegister');
 // const idInput = document.getElementById('uid');
@@ -261,5 +261,6 @@ function selectedModal() {
 
 // Al abrir la pagina
 window.addEventListener("load", async () => {  
-  await onLoadSite();
+  isSession();
+  await showData();
 });
